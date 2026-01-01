@@ -93,10 +93,12 @@
    ```
 
 ## 📸 Screenshots
-![Main Screen](screenshots/main-start.jpg)
-![Pomodoro](screenshots/pomodro-en.jpg)
-![Settings](screenshots/lang-choose.jpg)
-![الواجهة العربية](screenshots/ar.jpg)
+<p align="center">
+  <img src="screenshots/main-start.jpg" width="250" alt="Main Screen">
+  <img src="screenshots/pomodro-en.jpg" width="250" alt="Pomodoro">
+  <img src="screenshots/lang-choose.jpg" width="250" alt="Settings">
+  <img src="screenshots/ar.jpg" width="250" alt="Arabic UI">
+</p>
 
 ## License
 This project is licensed under the MIT License.
