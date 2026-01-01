@@ -100,5 +100,28 @@
   <img src="screenshots/ar.jpg" width="150" alt="Arabic UI">
 </p>
 
+## ⬇️ Download / تحميل
+
+### English
+Get the latest version of **Study Timer**:
+
+👉 [Download latest release](https://github.com/ghonaime91/Study-Timer/releases/latest)
+
+**Available versions:**
+- Windows 64-bit (Recommended)  
+- Windows 32-bit  
+
+---
+
+### العربية
+احصل على آخر نسخة من **مؤقت المذاكرة**:
+
+👉 [اضغط هنا لتحميل آخر إصدار](https://github.com/ghonaime91/Study-Timer/releases/latest)
+
+**الإصدارات المتوفرة:**
+- ويندوز 64-بت (موصى بها)  
+- ويندوز 32-بت
+
+
 ## License
 This project is licensed under the MIT License.
