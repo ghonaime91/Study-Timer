@@ -1,6 +1,6 @@
 # Study Timer / مؤقت المذاكرة
 
-## 🇬🇧 English Description
+##  English Description
 
 ### Overview
 **Study Timer** is a desktop productivity application built with **Tauri** (Rust + JavaScript). It is designed to help users manage their study or work sessions effectively using a custom timer and the Pomodoro technique. The app is lightweight, supports background operation via the system tray, and can start automatically with Windows.
@@ -47,7 +47,7 @@
 
 ---
 
-## EG وصف المشروع (العربية)
+## وصف المشروع (العربية)
 
 ### نبذة عامة
 **مؤقت المذاكرة** هو تطبيق سطح مكتب للإنتاجية مبني باستخدام إطار العمل **Tauri** (Rust + JavaScript). تم تصميم التطبيق لمساعدة المستخدمين على تنظيم جلسات المذاكرة أو العمل بفعالية باستخدام مؤقت مخصص وتقنية البومودورو. التطبيق خفيف الوزن، ويعمل في الخلفية من خلال شريط النظام (System Tray)، ويمكنه العمل تلقائياً عند بدء تشغيل ويندوز.
