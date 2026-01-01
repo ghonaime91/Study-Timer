@@ -7,7 +7,7 @@ let pomodoroState = { session: 'work', cycle: 0 };
 
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 let osc = null, gain = null;
-let mediaMedia = null; 
+let mediaMedia = null;
 let soundLoopTimer = null; // Timer for sound loops 
 let soundAutoStopTimer = null; // Timer for 60s stop 
 
@@ -126,7 +126,7 @@ const texts = {
 };
 
 /* ===== Update UI Language ===== */
-function updateUIText(){
+function updateUIText() {
     currentLang = langSelect.value;
     localStorage.setItem('lang', currentLang);
     document.getElementById('appTitleHeader').textContent = texts[currentLang].appTitleHeader;
@@ -160,7 +160,7 @@ function updateUIText(){
     document.querySelector('#pomodoroLabel').textContent = texts[currentLang].pomodoroCycleLabel;
     document.getElementById('autostartLabel').textContent = texts[currentLang].autostartLabel;
     document.getElementById('customOption').textContent = texts[currentLang].customOption;
-    
+
     // Update sound options
     document.querySelector('option[value="bell"]').textContent = texts[currentLang].bell;
     document.querySelector('option[value="digital"]').textContent = texts[currentLang].digital;
@@ -175,14 +175,14 @@ function updateUIText(){
 }
 
 /* ===== Save & Load User Preferences ===== */
-function saveSettings(){
+function saveSettings() {
     localStorage.setItem('soundType', soundType.value);
     localStorage.setItem('freq', freq.value);
     localStorage.setItem('volume', volume.value);
 }
-function loadSettings(){
+function loadSettings() {
     const savedType = localStorage.getItem('soundType');
-    if(savedType && savedType !== 'custom') {
+    if (savedType && savedType !== 'custom') {
         soundType.value = savedType;
     } else {
         // Reset to sine if it was custom (since file is lost on refresh) or not set
@@ -190,19 +190,19 @@ function loadSettings(){
         localStorage.setItem('soundType', 'sine');
     }
 
-    if(localStorage.getItem('freq')) freq.value = localStorage.getItem('freq');
-    if(localStorage.getItem('volume')) volume.value = localStorage.getItem('volume');
-    if(localStorage.getItem('lang')){ currentLang = localStorage.getItem('lang'); langSelect.value=currentLang; }
+    if (localStorage.getItem('freq')) freq.value = localStorage.getItem('freq');
+    if (localStorage.getItem('volume')) volume.value = localStorage.getItem('volume');
+    if (localStorage.getItem('lang')) { currentLang = localStorage.getItem('lang'); langSelect.value = currentLang; }
 
     // Apply sound settings if active
-    if(osc){ osc.frequency.value = freq.value; gain.gain.value = volume.value; }
-    if(mediaMedia) mediaMedia.volume = volume.value;
+    if (osc) { osc.frequency.value = freq.value; gain.gain.value = volume.value; }
+    if (mediaMedia) mediaMedia.volume = volume.value;
 }
 loadSettings();
 updateUIText();
 
 /* ===== Autostart Toggle (UI + Plugin Integration) ===== */
-async function initAutostartUI(){
+async function initAutostartUI() {
     const saved = localStorage.getItem('autostart');
     autostartToggle.checked = saved === 'true';
     if (window.__TAURI__) {
@@ -222,7 +222,7 @@ async function initAutostartUI(){
     }
 }
 
-autostartToggle.addEventListener('change', async ()=>{
+autostartToggle.addEventListener('change', async () => {
     const wantEnable = autostartToggle.checked;
     localStorage.setItem('autostart', wantEnable ? 'true' : 'false');
     if (window.__TAURI__) {
@@ -244,32 +244,32 @@ autostartToggle.addEventListener('change', async ()=>{
 });
 /* ===== Sound Generation Logic ===== */
 // Helper to play a tone
-function playTone(freq, type, duration, startTime=0, vol=1) {
+function playTone(freq, type, duration, startTime = 0, vol = 1) {
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
     osc.type = type;
     osc.frequency.value = freq;
-    
+
     // Envelope
     gain.gain.setValueAtTime(0, audioCtx.currentTime + startTime);
     gain.gain.linearRampToValueAtTime(vol * volume.value, audioCtx.currentTime + startTime + 0.05);
     gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + startTime + duration);
-    
+
     osc.connect(gain);
     gain.connect(audioCtx.destination);
-    
+
     osc.start(audioCtx.currentTime + startTime);
     osc.stop(audioCtx.currentTime + startTime + duration);
-    
+
     return { osc, gain };
 }
 
-function createSound(){
+function createSound() {
     stopSound();
-    
+
     // Check if user selected "Custom Media"
-    if(soundType.value === 'custom') {
-        if(mediaMedia) {
+    if (soundType.value === 'custom') {
+        if (mediaMedia) {
             mediaMedia.loop = true; // Loop indefinitely
             mediaMedia.currentTime = 0;
             mediaMedia.play();
@@ -279,7 +279,7 @@ function createSound(){
 
     // Synthesized Sounds
     const type = soundType.value;
-    
+
     // Auto-stop after 60 seconds for all built-in sounds
     soundAutoStopTimer = setTimeout(stopSound, 60000);
 
@@ -294,7 +294,7 @@ function createSound(){
         soundLoopTimer = setInterval(playBell, 3000);
         return;
     }
-    
+
     if (type === 'digital') {
         const playDigital = () => {
             playTone(880, 'square', 0.1, 0);
@@ -313,28 +313,28 @@ function createSound(){
             osc.frequency.setValueAtTime(1500, audioCtx.currentTime);
             osc.frequency.exponentialRampToValueAtTime(2500, audioCtx.currentTime + 0.1);
             osc.frequency.exponentialRampToValueAtTime(1500, audioCtx.currentTime + 0.2);
-            
+
             gain.gain.setValueAtTime(0, audioCtx.currentTime);
             gain.gain.linearRampToValueAtTime(volume.value, audioCtx.currentTime + 0.05);
             gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
-            
+
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start();
             osc.stop(audioCtx.currentTime + 0.3);
-            
+
             setTimeout(() => {
-                 const osc2 = audioCtx.createOscillator();
-                 const gain2 = audioCtx.createGain();
-                 osc2.frequency.setValueAtTime(2500, audioCtx.currentTime);
-                 osc2.frequency.linearRampToValueAtTime(1800, audioCtx.currentTime + 0.1);
-                 gain2.gain.setValueAtTime(0, audioCtx.currentTime);
-                 gain2.gain.linearRampToValueAtTime(volume.value, audioCtx.currentTime + 0.05);
-                 gain2.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2);
-                 osc2.connect(gain2);
-                 gain2.connect(audioCtx.destination);
-                 osc2.start();
-                 osc2.stop(audioCtx.currentTime + 0.2);
+                const osc2 = audioCtx.createOscillator();
+                const gain2 = audioCtx.createGain();
+                osc2.frequency.setValueAtTime(2500, audioCtx.currentTime);
+                osc2.frequency.linearRampToValueAtTime(1800, audioCtx.currentTime + 0.1);
+                gain2.gain.setValueAtTime(0, audioCtx.currentTime);
+                gain2.gain.linearRampToValueAtTime(volume.value, audioCtx.currentTime + 0.05);
+                gain2.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2);
+                osc2.connect(gain2);
+                gain2.connect(audioCtx.destination);
+                osc2.start();
+                osc2.stop(audioCtx.currentTime + 0.2);
             }, 300);
         };
         playBirds();
@@ -376,22 +376,22 @@ function createSound(){
     osc.start();
 }
 
-function stopSound(){
-    if(soundLoopTimer) { clearInterval(soundLoopTimer); soundLoopTimer = null; }
-    if(soundAutoStopTimer) { clearTimeout(soundAutoStopTimer); soundAutoStopTimer = null; }
-    if(mediaMedia){ mediaMedia.pause(); mediaMedia.currentTime=0; }
-    if(osc){ try{ osc.stop(); }catch(e){} osc.disconnect(); if(gain) gain.disconnect(); osc=null; gain=null; }
+function stopSound() {
+    if (soundLoopTimer) { clearInterval(soundLoopTimer); soundLoopTimer = null; }
+    if (soundAutoStopTimer) { clearTimeout(soundAutoStopTimer); soundAutoStopTimer = null; }
+    if (mediaMedia) { mediaMedia.pause(); mediaMedia.currentTime = 0; }
+    if (osc) { try { osc.stop(); } catch (e) { } osc.disconnect(); if (gain) gain.disconnect(); osc = null; gain = null; }
 }
 
-soundType.addEventListener('click', (e)=>{
+soundType.addEventListener('click', (e) => {
 
 });
 
 
 function handleSoundSelection() {
-    saveSettings(); 
-    if(audioCtx.state==='suspended') audioCtx.resume();
-    stopSound(); 
+    saveSettings();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    stopSound();
     createSound();
 }
 
@@ -406,25 +406,25 @@ for (let i = 0; i < soundType.options.length; i++) {
 soundType.addEventListener('input', handleSoundSelection);
 
 
-[freq, volume].forEach(el=>{
-    el.addEventListener('input', ()=>{
+[freq, volume].forEach(el => {
+    el.addEventListener('input', () => {
         saveSettings();
-        if(osc && soundType.value !== 'custom'){ 
-            osc.frequency.value = freq.value; 
-            if(gain) gain.gain.value = volume.value; 
+        if (osc && soundType.value !== 'custom') {
+            osc.frequency.value = freq.value;
+            if (gain) gain.gain.value = volume.value;
         }
-        if(mediaMedia) mediaMedia.volume = volume.value;
+        if (mediaMedia) mediaMedia.volume = volume.value;
     });
 });
 
 /* ===== Custom Media Handling ===== */
-customFile.addEventListener('change', e=>{
-    const file = e.target.files[0]; 
-    if(!file) return; 
+customFile.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
     stopSound();
     const url = URL.createObjectURL(file);
-    if(file.type.startsWith('audio')) mediaMedia = new Audio(url);
-    else if(file.type.startsWith('video')){
+    if (file.type.startsWith('audio')) mediaMedia = new Audio(url);
+    else if (file.type.startsWith('video')) {
         mediaMedia = document.createElement('video');
         mediaMedia.src = url;
         mediaMedia.style.display = "none";
@@ -432,7 +432,7 @@ customFile.addEventListener('change', e=>{
         document.body.appendChild(mediaMedia);
     }
     mediaMedia.volume = volume.value;
-    
+
     // Enable and select custom option
     const customOpt = document.getElementById('customOption');
     customOpt.style.display = 'block';
@@ -441,162 +441,162 @@ customFile.addEventListener('change', e=>{
 });
 
 /* ===== Play Sound Trigger ===== */
-function playSound(){
-    if(audioCtx.state==='suspended') audioCtx.resume();
-    stopSound(); 
+function playSound() {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    stopSound();
     createSound();
 }
 playBtn.addEventListener('click', playSound);
 
 /* ===== Core Timer Logic ===== */
-function updateDisplay(){
-    const h = Math.floor(totalSeconds/3600);
-    const m = Math.floor((totalSeconds%3600)/60);
-    const s = totalSeconds%60;
-    timeEl.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+function updateDisplay() {
+    const h = Math.floor(totalSeconds / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+    timeEl.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 }
 
-function startTimerReal(callbackEnd=null, ignoreInput=false){
-    if(running) return;
-    if(totalSeconds===0 && !ignoreInput){
+function startTimerReal(callbackEnd = null, ignoreInput = false) {
+    if (running) return;
+    if (totalSeconds === 0 && !ignoreInput) {
         const h = +hours.value || 0;
         const m = +minutes.value || 0;
-        totalSeconds = h*3600 + m*60;
-        if(!totalSeconds) return showModal(texts[currentLang].timerEmpty);
+        totalSeconds = h * 3600 + m * 60;
+        if (!totalSeconds) return showModal(texts[currentLang].timerEmpty);
     }
-    endTime = Date.now() + totalSeconds*1000;
+    endTime = Date.now() + totalSeconds * 1000;
     localStorage.setItem('timerEndTime', endTime.toString());
-    localStorage.setItem('timerRunning','true');
-    if(callbackEnd) localStorage.setItem('timerCallback','pomodoro'); 
+    localStorage.setItem('timerRunning', 'true');
+    if (callbackEnd) localStorage.setItem('timerCallback', 'pomodoro');
     else localStorage.removeItem('timerCallback');
     running = true;
 
-    function checkTime(){
-        if(!running) return;
-        totalSeconds = Math.round((endTime-Date.now())/1000);
-        if(totalSeconds<=0){
-            totalSeconds=0; updateDisplay(); stopTimer(); beep();
-            showModal(callbackEnd ? (pomodoroState.session==='work'?texts[currentLang].studyFinished:texts[currentLang].breakFinished) : texts[currentLang].alertFinished);
-            if(callbackEnd) callbackEnd();
+    function checkTime() {
+        if (!running) return;
+        totalSeconds = Math.round((endTime - Date.now()) / 1000);
+        if (totalSeconds <= 0) {
+            totalSeconds = 0; updateDisplay(); stopTimer(); beep();
+            showModal(callbackEnd ? (pomodoroState.session === 'work' ? texts[currentLang].studyFinished : texts[currentLang].breakFinished) : texts[currentLang].alertFinished);
+            if (callbackEnd) callbackEnd();
             return;
         }
         updateDisplay();
     }
 
-    timer = setInterval(checkTime,200); checkTime();
+    timer = setInterval(checkTime, 200); checkTime();
 }
 
-function stopTimer(){
-    clearInterval(timer); running=false;
+function stopTimer() {
+    clearInterval(timer); running = false;
     localStorage.removeItem('timerEndTime');
     localStorage.removeItem('timerRunning');
     localStorage.removeItem('timerCallback');
-    if(!pomodoroCycle.checked) localStorage.removeItem('pomodoroState');
+    if (!pomodoroCycle.checked) localStorage.removeItem('pomodoroState');
 }
 
-function resetTimer(){
+function resetTimer() {
     stopTimer();
-    totalSeconds=0;
+    totalSeconds = 0;
     updateDisplay();
-    hours.value=minutes.value="";
+    hours.value = minutes.value = "";
     localStorage.removeItem('pomodoroState');
 }
 
 /* ===== Pomodoro Cycle Management ===== */
-function startPomodoroCycle(workMinutes=25, shortBreak=5, longBreak=15, cycles=4){
-    pomodoroState={session:'work', cycle:0}; totalSeconds=workMinutes*60;
-    updateDisplay(); 
+function startPomodoroCycle(workMinutes = 25, shortBreak = 5, longBreak = 15, cycles = 4) {
+    pomodoroState = { session: 'work', cycle: 0 }; totalSeconds = workMinutes * 60;
+    updateDisplay();
     localStorage.setItem('pomodoroState', JSON.stringify(pomodoroState));
 
-    function nextSession(){
-        if(!pomodoroCycle.checked) return;
-        let isLongBreak = pomodoroState.cycle>0 && pomodoroState.cycle%cycles===0;
-        if(isLongBreak){
-            totalSeconds = longBreak*60;
-            pomodoroState.session='break';
+    function nextSession() {
+        if (!pomodoroCycle.checked) return;
+        let isLongBreak = pomodoroState.cycle > 0 && pomodoroState.cycle % cycles === 0;
+        if (isLongBreak) {
+            totalSeconds = longBreak * 60;
+            pomodoroState.session = 'break';
         } else {
-            totalSeconds = (pomodoroState.session==='work'?shortBreak*60:workMinutes*60);
-            pomodoroState.session = (pomodoroState.session==='work'?'break':'work');
+            totalSeconds = (pomodoroState.session === 'work' ? shortBreak * 60 : workMinutes * 60);
+            pomodoroState.session = (pomodoroState.session === 'work' ? 'break' : 'work');
         }
-        endTime = Date.now() + totalSeconds*1000;
+        endTime = Date.now() + totalSeconds * 1000;
         updateDisplay();
         pomodoroState.cycle++;
         localStorage.setItem('pomodoroState', JSON.stringify(pomodoroState));
-        startTimerReal(nextSession,true);
+        startTimerReal(nextSession, true);
     }
 
-    endTime = Date.now() + totalSeconds*1000;
-    startTimerReal(nextSession,true);
+    endTime = Date.now() + totalSeconds * 1000;
+    startTimerReal(nextSession, true);
 }
 
-pomodoroCycle.addEventListener('change', ()=>{
-    if(pomodoroCycle.checked) pomodoroModal.style.display='flex';
-    else { stopTimer(); totalSeconds=0; updateDisplay(); localStorage.removeItem('pomodoroState'); }
+pomodoroCycle.addEventListener('change', () => {
+    if (pomodoroCycle.checked) pomodoroModal.style.display = 'flex';
+    else { stopTimer(); totalSeconds = 0; updateDisplay(); localStorage.removeItem('pomodoroState'); }
 });
 
-pomoOkBtn.addEventListener('click', ()=>{
-    if('Notification' in window && Notification.permission === 'default') {
+pomoOkBtn.addEventListener('click', () => {
+    if ('Notification' in window && Notification.permission === 'default') {
         Notification.requestPermission();
     }
-    pomodoroModal.style.display='none';
-    startPomodoroCycle(+pomoWork.value,+pomoShort.value,+pomoLong.value,+pomoCycles.value);
+    pomodoroModal.style.display = 'none';
+    startPomodoroCycle(+pomoWork.value, +pomoShort.value, +pomoLong.value, +pomoCycles.value);
 });
 
 /* ===== Notification System ===== */
-function beep(){
+function beep() {
     // Try to send notification via Tauri Rust plugin
-    if(window.__TAURI__){
+    if (window.__TAURI__) {
         const invoke = window.__TAURI__.core.invoke;
         invoke('show_notification', {
-            title: currentLang==='ar'?'مؤقت المذاكرة':'Study Timer',
-            body: pomodoroState.session==='work'?texts[currentLang].studyFinished:texts[currentLang].breakFinished
+            title: currentLang === 'ar' ? 'مؤقت المذاكرة' : 'Study Timer',
+            body: pomodoroState.session === 'work' ? texts[currentLang].studyFinished : texts[currentLang].breakFinished
         }).catch(err => console.error('Tauri notification failed:', err));
-    } 
+    }
     // Fallback to standard Web Notification API
-    else if(document.hidden && 'Notification' in window && Notification.permission==='granted'){
-         new Notification(currentLang==='ar'?'مؤقت المذاكرة':'Study Timer',{
-            body: pomodoroState.session==='work'?texts[currentLang].studyFinished:texts[currentLang].breakFinished,
+    else if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
+        new Notification(currentLang === 'ar' ? 'مؤقت المذاكرة' : 'Study Timer', {
+            body: pomodoroState.session === 'work' ? texts[currentLang].studyFinished : texts[currentLang].breakFinished,
             icon: 'icon.ico'
         });
     }
 
-    if(audioCtx.state==='suspended') audioCtx.resume().then(()=>playSound()).catch(()=>{});
+    if (audioCtx.state === 'suspended') audioCtx.resume().then(() => playSound()).catch(() => { });
     else playSound();
 }
 
 /* ===== Modal Utilities ===== */
-function showModal(text){ modalText.textContent=text; alertModal.style.display='flex'; }
-function closeModal(){ stopSound(); alertModal.style.display='none'; }
+function showModal(text) { modalText.textContent = text; alertModal.style.display = 'flex'; }
+function closeModal() { stopSound(); alertModal.style.display = 'none'; }
 
 /* ===== Restore Timer State on Load ===== */
-function resumeTimerOnLoad(){
-    const savedEndTime=localStorage.getItem('timerEndTime');
-    const savedRunning=localStorage.getItem('timerRunning');
-    if(savedEndTime && savedRunning==='true'){
-        const now=Date.now();
-        const savedEnd=parseInt(savedEndTime);
-        const remaining=Math.round((savedEnd-now)/1000);
-        const savedPomodoroState=localStorage.getItem('pomodoroState');
-        if(savedPomodoroState) pomodoroState=JSON.parse(savedPomodoroState), pomodoroCycle.checked=true;
-        if(remaining<=0){
-            totalSeconds=0; updateDisplay();
+function resumeTimerOnLoad() {
+    const savedEndTime = localStorage.getItem('timerEndTime');
+    const savedRunning = localStorage.getItem('timerRunning');
+    if (savedEndTime && savedRunning === 'true') {
+        const now = Date.now();
+        const savedEnd = parseInt(savedEndTime);
+        const remaining = Math.round((savedEnd - now) / 1000);
+        const savedPomodoroState = localStorage.getItem('pomodoroState');
+        if (savedPomodoroState) pomodoroState = JSON.parse(savedPomodoroState), pomodoroCycle.checked = true;
+        if (remaining <= 0) {
+            totalSeconds = 0; updateDisplay();
             localStorage.removeItem('timerEndTime');
             localStorage.removeItem('timerRunning');
             localStorage.removeItem('timerCallback');
             localStorage.removeItem('pomodoroState');
-            pomodoroCycle.checked=false;
+            pomodoroCycle.checked = false;
             beep();
             showModal(texts[currentLang].alertFinished);
         } else {
-            totalSeconds=remaining;
-            endTime=savedEnd;
+            totalSeconds = remaining;
+            endTime = savedEnd;
             updateDisplay();
-            const hasCallback=localStorage.getItem('timerCallback')==='pomodoro';
-            if(hasCallback && pomodoroCycle.checked){
-                startTimerReal(()=>{ 
-                    if(pomodoroCycle.checked) startPomodoroCycle(+pomoWork.value,+pomoShort.value,+pomoLong.value,+pomoCycles.value); 
-                },true);
-            } else startTimerReal(null,true);
+            const hasCallback = localStorage.getItem('timerCallback') === 'pomodoro';
+            if (hasCallback && pomodoroCycle.checked) {
+                startTimerReal(() => {
+                    if (pomodoroCycle.checked) startPomodoroCycle(+pomoWork.value, +pomoShort.value, +pomoLong.value, +pomoCycles.value);
+                }, true);
+            } else startTimerReal(null, true);
         }
     }
 }
@@ -604,15 +604,15 @@ window.addEventListener('load', resumeTimerOnLoad);
 window.addEventListener('focus', resumeTimerOnLoad);
 
 /* ===== Background Time Check ===== */
-setInterval(()=>{
-    const savedEndTime=localStorage.getItem('timerEndTime');
-    const savedRunning=localStorage.getItem('timerRunning');
-    if(savedEndTime && savedRunning==='true'){
-        const now=Date.now();
-        const savedEnd=parseInt(savedEndTime);
-        if(now>=savedEnd) beep();
+setInterval(() => {
+    const savedEndTime = localStorage.getItem('timerEndTime');
+    const savedRunning = localStorage.getItem('timerRunning');
+    if (savedEndTime && savedRunning === 'true') {
+        const now = Date.now();
+        const savedEnd = parseInt(savedEndTime);
+        if (now >= savedEnd) beep();
     }
-},1000);
+}, 1000);
 
 /* ===== Settings Modal (Combined) ===== */
 settingsBtn.addEventListener('click', () => {
@@ -625,14 +625,14 @@ settingsOkBtn.addEventListener('click', () => {
 });
 
 /* ===== Control Buttons Event Listeners ===== */
-document.getElementById('startBtn').addEventListener('click', ()=>{
-    if('Notification' in window && Notification.permission === 'default') {
+document.getElementById('startBtn').addEventListener('click', () => {
+    if ('Notification' in window && Notification.permission === 'default') {
         Notification.requestPermission();
     }
     startTimerReal();
 });
-document.getElementById('stopBtn').addEventListener('click', ()=>stopTimer());
-document.getElementById('resetBtn').addEventListener('click', ()=>resetTimer());
+document.getElementById('stopBtn').addEventListener('click', () => stopTimer());
+document.getElementById('resetBtn').addEventListener('click', () => resetTimer());
 
 /* ===== Autostart Feature ===== */
 window.addEventListener('load', initAutostartUI);
