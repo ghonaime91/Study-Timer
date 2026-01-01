@@ -92,5 +92,11 @@
    npm run tauri build
    ```
 
+## 📸 Screenshots
+![Main Screen](screenshots/main-start.jpg)
+![Pomodoro](screenshots/pomodro-en.jpg)
+![Settings](screenshots/lang-choose.jpg)
+![الواجهة العربية](screenshots/ar.jpg)
+
 ## License
 This project is licensed under the MIT License.
