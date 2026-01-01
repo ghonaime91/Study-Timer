@@ -553,8 +553,7 @@ function startTimerReal(callbackEnd = null, ignoreInput = false) {
             stopTimer();
             beep();
             showModal(
-                callbackEnd
-                    ? pomodoroState.session === "work"
+                callbackEnd? pomodoroState.session === "work"
                         ? texts[currentLang].studyFinished
                         : texts[currentLang].breakFinished
                     : texts[currentLang].alertFinished
