@@ -1,0 +1,49 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Study Timer",
+  "version": "3.1.0",
+  "identifier": "com.ahmedghonaime.studytimer",
+  "build": {
+    "devUrl": null,
+    "frontendDist": "dist",
+    "beforeDevCommand": "",
+    "beforeBuildCommand": ""
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "Study Timer",
+        "width": 400,
+        "height": 766,
+        "resizable": false,
+        "minWidth": 400,
+        "maxWidth": 400,
+        "minHeight": 766,
+        "maxHeight": 766,
+        "center": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper"
+      },
+      "nsis": {
+        "languages": ["Arabic", "English"],
+        "displayLanguageSelector": true
+      }
+    }
+  }
+}
