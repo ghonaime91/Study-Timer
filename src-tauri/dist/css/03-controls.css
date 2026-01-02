@@ -1,0 +1,48 @@
+/* Pomodoro Checkbox and time container */
+#pomodoroLabel {
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+#pomodoroCycle {
+  width: 16px;
+  height: 16px;
+}
+
+#time-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin: 10px 0;
+}
+
+#settingsBtn {
+  position: absolute;
+  left: -8px;
+  padding: 4px 8px;
+  font-size: 37px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color);
+  background: transparent;
+  transition: 0.3s;
+}
+
+#settingsBtn:hover { opacity: 0.85; background: rgba(255, 255, 255, 0.1); }
+
+input[type="range"],
+select {
+  width: 100%;
+  margin-top: 5px;
+}
+
+@media (max-width: 400px) {
+  #time { font-size: 36px; }
+}

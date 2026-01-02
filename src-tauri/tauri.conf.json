@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Study Timer",
-  "version": "3.1.0",
+  "version": "1.0.0",
   "identifier": "com.ahmedghonaime.studytimer",
   "build": {
     "devUrl": null,
@@ -16,12 +16,12 @@
         "label": "main",
         "title": "Study Timer",
         "width": 400,
-        "height": 766,
+        "height": 770,
         "resizable": false,
         "minWidth": 400,
         "maxWidth": 400,
-        "minHeight": 766,
-        "maxHeight": 766,
+        "minHeight": 770,
+        "maxHeight": 770,
         "center": true,
         "fullscreen": false
       }

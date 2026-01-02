@@ -1,0 +1,110 @@
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-gradient);
+  color: var(--text-color);
+  transition: all 0.3s;
+}
+
+body.rtl {
+  direction: rtl;
+}
+
+.timer-box {
+  width: 100%;
+  max-width: 360px;
+  background: var(--box-bg);
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 0;
+}
+
+.inputs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+body.rtl .inputs {
+  flex-direction: row-reverse;
+}
+
+.inputs input {
+  width: 50%;
+}
+
+input,
+select {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  text-align: center;
+  font-size: 16px;
+  background-color: var(--input-bg);
+  color: var(--input-text);
+}
+
+#customFile {
+  background-color: var(--custom-file-bg);
+  color: var(--text-color);
+}
+
+#time {
+  font-size: 46px !important;
+  text-align: center;
+  margin: 5px 0;
+  font-weight: bold;
+  display: inline-block;
+  width: 100%;
+  margin-left: 35px;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+  color: #fff;
+}
+
+.start { background: var(--btn-start-bg); }
+.stop { background: var(--btn-stop-bg); }
+.reset { background: var(--btn-reset-bg); }
+.test { background: var(--btn-test-bg); }
+.mute { background: var(--btn-mute-bg); }
+
+button:hover { opacity: 0.85; }
+
+hr {
+  border: none;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 18px 0;
+}
+
+.control { margin-bottom: 12px; }

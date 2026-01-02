@@ -3,135 +3,160 @@
 
 <head>
     <meta charset="UTF-8">
-    <title id="appTitle">Study Timer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <title id="appTitle" data-i18n="appTitleHeader">Study Timer</title>
+    <link rel="icon" href="icon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/01-variables.css">
+    <link rel="stylesheet" href="css/02-base.css">
+    <link rel="stylesheet" href="css/03-controls.css">
+    <link rel="stylesheet" href="css/04-modals.css">
+    <link rel="stylesheet" href="css/05-overrides.css">
 </head>
 
 <body>
 
     <div class="timer-box">
-        <h1 id="appTitleHeader">Study Timer</h1>
+        <h1 id="appTitleHeader" data-i18n="appTitleHeader">Study Timer</h1>
 
         <div class="inputs">
-            <input type="number" id="hours" placeholder="Hours" min="0">
-            <input type="number" id="minutes" placeholder="Minutes" min="0">
+            <input type="number" id="hours" data-i18n-placeholder="hoursPlaceholder" placeholder="Hours" min="0">
+            <input type="number" id="minutes" data-i18n-placeholder="minutesPlaceholder" placeholder="Minutes" min="0">
         </div>
 
-        <!-- Timer + Language Button -->
+        <!-- Timer Display & Settings Trigger -->
         <div id="time-container">
-            <button id="settingsBtn" class="small-btn">⚙️</button>
+            <button id="settingsBtn" class="small-btn" aria-label="Settings">⚙️</button>
             <div id="time">00:00:00</div>
         </div>
 
+        <!-- Main Controls -->
         <div class="buttons">
-            <button class="start" id="startBtn">Start</button>
-            <button class="stop" id="stopBtn">Stop</button>
-            <button class="reset" id="resetBtn">Reset</button>
+            <button class="start" id="startBtn" data-i18n="startBtn">Start</button>
+            <button class="stop" id="stopBtn" data-i18n="stopTimerBtn">Stop</button>
+            <button class="reset" id="resetBtn" data-i18n="resetBtn">Reset</button>
         </div>
-        
 
-
- <div class="control pomodoro-control">
-    <input type="checkbox" id="pomodoroCycle">
-    <label for="pomodoroCycle" id="pomodoroLabel">Pomodoro Auto Cycle</label>
-
-    <!-- Pomodoro Modal -->
-    <div id="pomodoroModal" class="modal">
-        <div class="modal-content">
-            <h3 id="pomoModalTitle">Pomodoro Settings</h3>
-            <div class="pomo-input">
-                <label for="pomoWork" id="pomoWorkLabel">Study (min)</label>
-                <input type="number" id="pomoWork" value="25" min="1">
-            </div>
-            <div class="pomo-input">
-                <label for="pomoShort" id="pomoShortLabel">Short Break (min)</label>
-                <input type="number" id="pomoShort" value="5" min="1">
-            </div>
-            <div class="pomo-input">
-                <label for="pomoLong" id="pomoLongLabel">Long Break (min)</label>
-                <input type="number" id="pomoLong" value="15" min="1">
-            </div>
-            <div class="pomo-input">
-                <label for="pomoCycles" id="pomoCyclesLabel">Cycles</label>
-                <input type="number" id="pomoCycles" value="4" min="1">
-            </div>
-            <button id="pomoOkBtn">OK</button>
+        <!-- Pomodoro Controls -->
+        <div class="control pomodoro-control">
+            <input type="checkbox" id="pomodoroCycle">
+            <label for="pomodoroCycle" id="pomodoroLabel" data-i18n="pomodoroCycleLabel">Pomodoro Auto Cycle</label>
         </div>
-    </div>
-</div>
-
 
         <hr>
 
+        <!-- Sound Controls -->
         <div class="control">
-            <label for="soundType" id="soundTypeLabel">Sound Type</label>
+            <label for="soundType" id="soundTypeLabel" data-i18n="soundTypeLabel">Sound Type</label>
             <select id="soundType">
-                <option value="bell">Bell 🔔</option>
-                <option value="digital">Digital ⏰</option>
-                <option value="birds">Birds 🐦</option>
-                <option value="piano">Piano 🎹</option>
-                <option value="magic">Magic ✨</option>
-                <option value="sine" id="sineOption">Sine 〰️</option>
-                <option value="triangle" id="triangleOption">Triangle 🔺</option>
-                <option value="square" id="squareOption">Square ⬛</option>
-                <option value="sawtooth" id="sawtoothOption">Sawtooth 📉</option>
-                <option value="custom" id="customOption" style="display:none;">Custom Media</option>
+                <option value="bell" data-i18n="bell">Bell 🔔</option>
+                <option value="digital" data-i18n="digital">Digital ⏰</option>
+                <option value="birds" data-i18n="birds">Birds 🐦</option>
+                <option value="piano" data-i18n="piano">Piano 🎹</option>
+                <option value="magic" data-i18n="magic">Magic ✨</option>
+                <option value="sine" id="sineOption" data-i18n="sineOption">Sine 〰️</option>
+                <option value="triangle" id="triangleOption" data-i18n="triangleOption">Triangle 🔺</option>
+                <option value="square" id="squareOption" data-i18n="squareOption">Square ⬛</option>
+                <option value="sawtooth" id="sawtoothOption" data-i18n="sawtoothOption">Sawtooth 📉</option>
+                <option value="custom" id="customOption" style="display:none;" data-i18n="customOption">Custom Media</option>
             </select>
         </div>
 
         <div class="control">
-            <label for="freq" id="freqLabel">Frequency</label>
+            <label for="freq" id="freqLabel" data-i18n="freqLabel">Frequency</label>
             <input type="range" id="freq" min="200" max="1200" value="600">
         </div>
 
         <div class="control">
-            <label for="volume" id="volumeLabel">Volume</label>
+            <label for="volume" id="volumeLabel" data-i18n="volumeLabel">Volume</label>
             <input type="range" id="volume" min="0" max="1" step="0.01" value="0.1">
         </div>
 
         <div class="control">
-            <label for="customFile" id="uploadLabel">Upload Sound / Video</label>
+            <label for="customFile" id="uploadLabel" data-i18n="uploadLabel">Use Custom Sound / Video</label>
             <input type="file" id="customFile" accept="audio/*,video/*">
         </div>
 
         <div class="buttons">
-            <button class="test" id="playBtn">Test Sound</button>
-            <button class="mute" onclick="stopSound()">Stop Sound</button>
+            <button class="test" id="playBtn" data-i18n="testBtn">Test Sound</button>
+            <button class="mute" id="muteBtn" data-i18n="stopBtn">Stop Sound</button>
         </div>
     </div>
 
-    <!-- Timer Alert Modal -->
+    <!-- ================= MODALS ================= -->
+
+    <!-- Pomodoro Settings Modal -->
+    <div id="pomodoroModal" class="modal">
+        <div class="modal-content">
+            <h3 id="pomoModalTitle" data-i18n="pomodoroTitle">Pomodoro Settings</h3>
+            
+            <div class="pomo-input">
+                <label for="pomoWork" id="pomoWorkLabel" data-i18n="studyLabel">Study (min)</label>
+                <input type="number" id="pomoWork" value="25" min="1">
+            </div>
+            
+            <div class="pomo-input">
+                <label for="pomoShort" id="pomoShortLabel" data-i18n="shortBreakLabel">Short Break (min)</label>
+                <input type="number" id="pomoShort" value="5" min="1">
+            </div>
+            
+            <div class="pomo-input">
+                <label for="pomoLong" id="pomoLongLabel" data-i18n="longBreakLabel">Long Break (min)</label>
+                <input type="number" id="pomoLong" value="15" min="1">
+            </div>
+            
+            <div class="pomo-input">
+                <label for="pomoCycles" id="pomoCyclesLabel" data-i18n="cyclesLabel">Cycles</label>
+                <input type="number" id="pomoCycles" value="4" min="1">
+            </div>
+            
+            <button id="pomoOkBtn" data-i18n="modalOk">OK</button>
+        </div>
+    </div>
+
+    <!-- Alert Modal -->
     <div id="alertModal" class="modal">
         <div class="modal-content">
             <p id="modalText">Time's up!</p>
-            <button onclick="closeModal()" id="modalOkBtn">OK</button>
+            <button id="alertOkBtn" data-i18n="modalOk">OK</button>
         </div>
     </div>
 
     <!-- Settings Modal -->
     <div id="settingsModal" class="modal">
         <div class="modal-content">
-            <h3 id="settingsModalTitle">Settings</h3>
+            <h3 id="settingsModalTitle" data-i18n="settingsTitle">Settings</h3>
             
             <div class="control" style="margin-bottom: 20px;">
-                <label for="langSelect" id="langSelectLabel" style="display:block; margin-bottom:5px;">Language</label>
+                <label for="langSelect" id="langSelectLabel" style="display:block; margin-bottom:5px;" data-i18n="langSelectLabel">Language</label>
                 <select id="langSelect" style="width: 100%;">
                     <option value="en">English</option>
                     <option value="ar">العربية</option>
                 </select>
             </div>
 
-            <div class="control" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px;">
-                <input type="checkbox" id="autostartToggle" style="width: 20px; height: 20px;">
-                <label for="autostartToggle" id="autostartLabel" style="margin: 0;">Start with Windows</label>
+            <div class="control" style="margin-bottom: 20px;">
+                <label for="themeSelect" id="themeSelectLabel" style="display:block; margin-bottom:5px;" data-i18n="themeSelectLabel">Theme</label>
+                <select id="themeSelect" style="width: 100%;">
+                    <option value="primary" data-i18n="primaryTheme">Primary Mode 🎨</option>
+                    <option value="dark" data-i18n="darkTheme">Dark Mode 🌑</option>
+                    <option value="light" data-i18n="lightTheme">Light Mode ☀️</option>
+                    <option value="glassy" data-i18n="glassyTheme">Icy Glass 🧊</option>
+                </select>
             </div>
 
-            <button id="settingsOkBtn">OK</button>
+            <div class="control" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px;">
+                <input type="checkbox" id="autostartToggle" style="width: 20px; height: 20px;">
+                <label for="autostartToggle" id="autostartLabel" style="margin: 0;" data-i18n="autostartLabel">Start with Windows</label>
+            </div>
+
+            <button id="settingsOkBtn" data-i18n="modalOk">OK</button>
         </div>
     </div>
 
-    <script src="script.js"></script>
-    <script src="main.js"></script>
+    <script type="module" src="js/globals.js"></script>
+    <script type="module" src="js/ui-settings.js"></script>
+    <script type="module" src="js/sound.js"></script>
+    <script type="module" src="js/timer.js"></script>
+    <script type="module" src="js/autostart.js"></script>
 </body>
 </html>

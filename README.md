@@ -6,18 +6,27 @@
 **Study Timer** is a desktop productivity application built with **Tauri** (Rust + JavaScript). It is designed to help users manage their study or work sessions effectively using a custom timer and the Pomodoro technique. The app is lightweight, supports background operation via the system tray, and can start automatically with Windows.
 
 ### Features
-- **Custom Timer:** Set specific hours and minutes for your study sessions.
-- **Pomodoro Mode:** Built-in Pomodoro cycle (Work, Short Break, Long Break) with customizable durations and cycle counts.
-- **Sound Alerts:**
-  - Built-in frequency oscillator (beep sounds).
-  - Very Cool Sounds like birds, piano , etc
-  - Support for uploading custom audio or video files as alerts.
-  - Volume and frequency control.
-- **Notifications:** Desktop notifications when the timer ends (even if the app is minimized).
-- **System Tray:** The app minimizes to the system tray to keep your taskbar clean.
-- **Autostart:** Option to launch the application automatically when Windows starts.
-- **Multi-language Support:** Fully localized interface in English and Arabic.
-- **Persistent Settings:** Saves your preferences (volume, language, timer state) automatically.
+- **Timer & Pomodoro**
+  - Custom timer (hours/minutes) with resume-on-start and background time check.
+  - Pomodoro auto-cycle with adjustable Work/Short/Long durations and cycle count; automatic next session with notification.
+- **Audio & Alerts**
+  - Built-in sounds: Bell, Digital, Birds, Piano, Magic; and waveforms: Sine, Triangle, Square, Sawtooth.
+  - Frequency and volume control; Test and Stop buttons.
+  - Custom media upload (audio/video) with looping and volume control.
+- **Notifications**
+  - Native Tauri notifications; Web Notifications fallback when window is not focused (after permission).
+- **UI & Themes**
+  - Four themes: Primary, Dark, Light, Glassy.
+  - Arabic typography refinements in Glassy theme; improved file input spacing in Glassy.
+  - Full RTL support for Arabic UI.
+- **System Integration**
+  - Minimize to system tray with Show/Exit menu.
+  - Autostart with Windows (with verification and user-friendly error handling).
+  - Window positioned at the far right of the screen on launch.
+- **Settings & Localization**
+  - Settings modal: Language, Theme, Autostart.
+  - i18n: Full English/Arabic strings with live updates for labels/placeholders.
+  - Persisted preferences: sound type, frequency, volume, theme, language, timer state, autostart.
 
 ### Tech Stack
 - **Frontend:** HTML, CSS, JavaScript (Vanilla).
@@ -53,18 +62,27 @@
 **مؤقت المذاكرة** هو تطبيق سطح مكتب للإنتاجية مبني باستخدام إطار العمل **Tauri** (Rust + JavaScript). تم تصميم التطبيق لمساعدة المستخدمين على تنظيم جلسات المذاكرة أو العمل بفعالية باستخدام مؤقت مخصص وتقنية البومودورو. التطبيق خفيف الوزن، ويعمل في الخلفية من خلال شريط النظام (System Tray)، ويمكنه العمل تلقائياً عند بدء تشغيل ويندوز.
 
 ### المميزات
-- **مؤقت مخصص:** تحديد ساعات ودقائق محددة لجلسة المذاكرة.
-- **نظام بومودورو:** دورات بومودورو مدمجة (عمل، استراحة قصيرة، استراحة طويلة) مع إمكانية تعديل الأوقات وعدد الدورات.
-- **تنبيهات صوتية:**
-  - مولد نغمات مدمج (تحكم في التردد).
-  - أصوات جميلة مثل صوت عصفور وبيانو الخ
-  - إمكانية رفع ملفات صوتية أو فيديو خاصة لاستخدامها كمنبه.
-  - تحكم كامل في مستوى الصوت ونوع النغمة.
-- **الإشعارات:** إشعارات سطح المكتب عند انتهاء الوقت (حتى لو كان التطبيق مصغراً).
-- **شريط النظام (Tray):** إمكانية تصغير التطبيق إلى شريط المهام بجوار الساعة.
-- **التشغيل التلقائي:** خاصية بدء التشغيل مع الويندوز (Startup).
-- **دعم اللغات:** واجهة كاملة باللغتين العربية والإنجليزية.
-- **حفظ الإعدادات:** حفظ تلقائي لتفضيلات المستخدم (الصوت، اللغة، حالة المؤقت).
+- **المؤقت والبومودورو**
+  - مؤقّت مخصص بالساعات والدقائق، واستعادة الحالة عند التشغيل، ومراقبة الوقت في الخلفية حتى لا تفوت نهاية الجلسة.
+  - دورة بومودورو تلقائية مع ضبط أوقات العمل/الاستراحة القصيرة/الطويلة وعدد الدورات؛ انتقال تلقائي للجلسة التالية مع إشعار.
+- **الصوت والتنبيهات**
+  - أصوات مدمجة: جرس، رقمي، عصافير، بيانو، سحر؛ وموجات: جيبية، مثلثية، مربعة، سن المنشار.
+  - تحكم في التردد ومستوى الصوت؛ أزرار "تجربة الصوت" و"إيقاف".
+  - دعم رفع ملفات صوت/فيديو مخصصة مع تكرار والتحكم في الصوت.
+- **الإشعارات**
+  - إشعارات أصلية عبر Tauri؛ وبديل إشعارات الويب عند عدم تركيز النافذة (بعد منح الإذن).
+- **الواجهة والمظاهر**
+  - أربع مظاهر: الأساسي، الداكن، الفاتح، الزجاجي.
+  - تحسين عرض الخط العربي في المظهر الزجاجي؛ وضبط مسافات حقل رفع الملف في المظهر الزجاجي.
+  - دعم كامل لاتجاه RTL للغة العربية.
+- **التكامل مع النظام**
+  - تصغير إلى شريط النظام مع قائمة "إظهار/خروج".
+  - بدء التشغيل مع ويندوز مع التحقق ورسائل خطأ ودّودة.
+  - تموضع النافذة تلقائياً عند أقصى يمين الشاشة عند الإقلاع.
+- **الإعدادات والتعريب**
+  - نافذة إعدادات لاختيار اللغة والمظهر وبدء التشغيل.
+  - i18n: نصوص كاملة بالعربية والإنجليزية مع تحديث فوري للعناوين والأزرار.
+  - حفظ تفضيلات المستخدم (نوع الصوت، التردد، مستوى الصوت، المظهر، اللغة، حالة المؤقت، التشغيل التلقائي).
 
 ### التقنيات المستخدمة
 - **الواجهة الأمامية (Frontend):** HTML, CSS, JavaScript.
