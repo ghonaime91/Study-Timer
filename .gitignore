@@ -9,6 +9,7 @@ target/
 src-tauri/target/
 src-tauri/gen/schemas/
 
+
 # OS Files
 .DS_Store
 Thumbs.db
