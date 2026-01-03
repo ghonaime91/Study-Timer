@@ -251,7 +251,10 @@ document.getElementById("startBtn").addEventListener("click", () => {
 document.getElementById("stopBtn").addEventListener("click", () => stopTimer());
 document
   .getElementById("resetBtn")
-  .addEventListener("click", () => resetTimer());
+  .addEventListener("click", () => {
+    dom.pomodoroCycle.checked = false;
+    resetTimer();
+  });
 
 export {
   startTimerReal,

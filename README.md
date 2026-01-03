@@ -18,7 +18,7 @@
 - **UI & Themes**
   - Four themes: Primary, Dark, Light, Glassy.
   - Arabic typography refinements in Glassy theme; improved file input spacing in Glassy.
-  - Full RTL support for Arabic UI.
+  - Full support for Arabic UI.
 - **System Integration**
   - Minimize to system tray with Show/Exit menu.
   - Autostart with Windows (with verification and user-friendly error handling).
@@ -74,7 +74,7 @@
 - **الواجهة والمظاهر**
   - أربع مظاهر: الأساسي، الداكن، الفاتح، الزجاجي.
   - تحسين عرض الخط العربي في المظهر الزجاجي؛ وضبط مسافات حقل رفع الملف في المظهر الزجاجي.
-  - دعم كامل لاتجاه RTL للغة العربية.
+  - دعم كامل  للغة العربية.
 - **التكامل مع النظام**
   - تصغير إلى شريط النظام مع قائمة "إظهار/خروج".
   - بدء التشغيل مع ويندوز مع التحقق ورسائل خطأ ودّودة.
