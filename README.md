@@ -29,7 +29,7 @@
   - Persisted preferences: sound type, frequency, volume, theme, language, timer state, autostart.
 
 ### Tech Stack
-- **Frontend:** HTML, CSS, JavaScript (Vanilla).
+- **Frontend:** HTML, CSS, JavaScript (Vanilla)source files are inside `src-tauri/dist` folder.
 - **Backend:** Rust (Tauri Framework).
 - **Plugins:** `tauri-plugin-autostart` for startup functionality.
 
@@ -85,7 +85,7 @@
   - حفظ تفضيلات المستخدم (نوع الصوت، التردد، مستوى الصوت، المظهر، اللغة، حالة المؤقت، التشغيل التلقائي).
 
 ### التقنيات المستخدمة
-- **الواجهة الأمامية (Frontend):** HTML, CSS, JavaScript.
+- **الواجهة الأمامية (Frontend):** HTML, CSS, JavaScript الملفات الاساسية داخل فولدر `src-tauri/dist`.
 - **الخلفية (Backend):** Rust (عبر إطار العمل Tauri).
 - **الإضافات:** `tauri-plugin-autostart` لخاصية التشغيل التلقائي.
 
