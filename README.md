@@ -113,7 +113,7 @@
 ## 📸 Screenshots
 <p align="center">
   <img src="screenshots/main-start.jpg" width="150" alt="Main Screen">
-  <img src="screenshots/pomodro-en.jpg" width="150" alt="Pomodoro">
+  <img src="screenshots/pomodro-en1.jpg" width="150" alt="Pomodoro">
   <img src="screenshots/glassy-theme.jpg" width="150" alt="Settings">
   <img src="screenshots/ar.jpg" width="150" alt="Arabic UI">
 </p>
