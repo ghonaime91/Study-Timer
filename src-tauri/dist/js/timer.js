@@ -9,29 +9,39 @@ function updateDisplay() {
   dom.timeEl.textContent = `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
 }
 
-function startTimerReal(callbackEnd = null, ignoreInput = false) {
-  if(app.running) return;
+function startTimerReal(callbackEnd = null, ignoreInput = false, resume = false) {
+  if (app.running) return;
 
-  if(app.totalSeconds === 0 && !ignoreInput) {
+  // If not resuming and totalSeconds is 0, read input values
+  if (!resume && app.totalSeconds === 0 && !ignoreInput) {
     const h = +dom.hours.value || 0;
     const m = +dom.minutes.value || 0;
-    app.totalSeconds = h*3600 + m*60;
-    if(!app.totalSeconds) return showModal(texts[app.currentLang].timerEmpty);
+    app.totalSeconds = h * 3600 + m * 60;
+    if (!app.totalSeconds) return showModal(texts[app.currentLang].timerEmpty);
   }
 
-  app.endTime = Date.now() + app.totalSeconds*1000;
-  localStorage.setItem("timerEndTime", app.endTime.toString());
+  // If not resuming, set a new endTime
+  if (!resume) {
+    app.endTime = Date.now() + app.totalSeconds * 1000;
+    localStorage.setItem("timerEndTime", app.endTime.toString());
+  }
+
   localStorage.setItem("timerRunning", "true");
-  if(callbackEnd) localStorage.setItem("timerCallback","pomodoro");
+
+  if (callbackEnd) localStorage.setItem("timerCallback", "pomodoro");
   else localStorage.removeItem("timerCallback");
 
+  // Clear any previous interval to prevent duplicates
+  clearInterval(app.timer);
   app.running = true;
 
   function checkTime() {
-    if(!app.running) return;
-    app.totalSeconds = Math.round((app.endTime - Date.now())/1000);
+    if (!app.running) return;
 
-    if(app.totalSeconds <= 0) {
+    // Calculate remaining seconds based on real time
+    app.totalSeconds = Math.round((app.endTime - Date.now()) / 1000);
+
+    if (app.totalSeconds <= 0) {
       app.totalSeconds = 0;
       updateDisplay();
       stopTimer();
@@ -45,16 +55,18 @@ function startTimerReal(callbackEnd = null, ignoreInput = false) {
           : texts[app.currentLang].alertFinished
       );
 
-      if(callbackEnd) callbackEnd();
+      if (callbackEnd) callbackEnd();
       return;
     }
 
     updateDisplay();
   }
 
-  app.timer = setInterval(checkTime,200);
+  // Run interval every 200ms for smooth update
+  app.timer = setInterval(checkTime, 200);
   checkTime();
 }
+
 
 function stopTimer() {
   clearInterval(app.timer);
@@ -182,43 +194,64 @@ function resumeTimerOnLoad() {
   const savedEndTime = localStorage.getItem("timerEndTime");
   const savedRunning = localStorage.getItem("timerRunning");
 
-  if(savedEndTime && savedRunning==="true") {
+  if (savedEndTime && savedRunning === "true") {
     const savedPomodoroState = localStorage.getItem("pomodoroState");
-    if(savedPomodoroState){
+    const now = Date.now();
+    const savedEnd = parseInt(savedEndTime);
+    const remaining = Math.round((savedEnd - now) / 1000);
+
+    if (savedPomodoroState) {
+      // Restore Pomodoro state
       app.pomodoroState = JSON.parse(savedPomodoroState);
       dom.pomodoroCycle.checked = true;
+    }
 
-      const settings = app.pomodoroState.settings || { workMinutes:25, shortBreak:5, longBreak:15, cycles:4};
+    if (remaining <= 0) {
+      // Timer already finished
+      app.totalSeconds = 0;
+      updateDisplay();
+      localStorage.removeItem("timerEndTime");
+      localStorage.removeItem("timerRunning");
+      localStorage.removeItem("timerCallback");
+      localStorage.removeItem("pomodoroState");
+      dom.pomodoroCycle.checked = false;
+      beep();
+      showModal(texts[app.currentLang].alertFinished);
+    } else {
+      // Timer still running, resume
+      app.totalSeconds = remaining;
+      app.endTime = savedEnd;
+      updateDisplay();
 
-      const now = Date.now();
-      const savedEnd = parseInt(savedEndTime);
-      const remaining = Math.round((savedEnd - now)/1000);
+      const hasCallback = localStorage.getItem("timerCallback") === "pomodoro";
 
-      if(remaining<=0){
-        app.totalSeconds = 0;
-        updateDisplay();
-        localStorage.removeItem("timerEndTime");
-        localStorage.removeItem("timerRunning");
-        localStorage.removeItem("timerCallback");
-        localStorage.removeItem("pomodoroState");
-        dom.pomodoroCycle.checked=false;
-        beep();
-        showModal(texts[app.currentLang].alertFinished);
+      if (hasCallback && dom.pomodoroCycle.checked) {
+        startTimerReal(() => {
+          if (dom.pomodoroCycle.checked) {
+            const settings = app.pomodoroState.settings || {
+              workMinutes: 25,
+              shortBreak: 5,
+              longBreak: 15,
+              maxCycles: 4,
+            };
+            startPomodoroCycle(
+              settings.workMinutes,
+              settings.shortBreak,
+              settings.longBreak,
+              settings.maxCycles
+            );
+          }
+        }, true, true);
       } else {
-        app.totalSeconds = remaining;
-        app.endTime = savedEnd;
-        updateDisplay();
-        const hasCallback = localStorage.getItem("timerCallback")==="pomodoro";
-        if(hasCallback && dom.pomodoroCycle.checked){
-          startTimerReal(()=>{
-            if(dom.pomodoroCycle.checked)
-              startPomodoroCycle(settings.workMinutes, settings.shortBreak, settings.longBreak, settings.cycles);
-          },true);
-        } else startTimerReal(null,true);
+        startTimerReal(null, true, true);
       }
     }
   }
 }
+
+window.addEventListener("load", resumeTimerOnLoad);
+window.addEventListener("focus", resumeTimerOnLoad);
+
 
 window.addEventListener("load",resumeTimerOnLoad);
 window.addEventListener("focus",resumeTimerOnLoad);

@@ -510,7 +510,7 @@ class StudyScheduleManager {
     this.updateUI();
     this.clearForm();
 
-    this.showNotification(`Session added: ${subject}`);
+    // this.showNotification(`Session added: ${subject}`);
   }
 
   editSession(sessionId) {
@@ -585,7 +585,7 @@ updateSession(sessionId) {
   this.updateUI();
   this.clearForm();
 
-  this.showNotification(`Session updated: ${subject}`);
+  // this.showNotification(`Session updated: ${subject}`);
 }
 
 
@@ -623,7 +623,7 @@ deleteSession(sessionId) {
   this.saveToStorage();
   this.updateUI();
 
-  this.showNotification(`Session deleted: ${session.subject}`);
+  // this.showNotification(`Session deleted: ${session.subject}`);
 }
 
 
