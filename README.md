@@ -27,6 +27,10 @@
   - Settings modal: Language, Theme, Autostart.
   - i18n: Full English/Arabic strings with live updates for labels/placeholders.
   - Persisted preferences: sound type, frequency, volume, theme, language, timer state, autostart.
+- **Weekly Study Schedule**
+  - Weekly schedule for organizing study.
+  - Ability to add subjects for each day with specific time durations.
+  - Easy editing and deleting of subjects.
 
 ### Tech Stack
 - **Frontend:** HTML, CSS, JavaScript (Vanilla)source files are inside `src-tauri/dist` folder.
@@ -83,6 +87,10 @@
   - نافذة إعدادات لاختيار اللغة والمظهر وبدء التشغيل.
   - i18n: نصوص كاملة بالعربية والإنجليزية مع تحديث فوري للعناوين والأزرار.
   - حفظ تفضيلات المستخدم (نوع الصوت، التردد، مستوى الصوت، المظهر، اللغة، حالة المؤقت، التشغيل التلقائي).
+- **جدول المذاكرة الأسبوعي**
+  - جدول أسبوعي لتنظيم المذاكرة.
+  - إمكانية إضافة مواد لكل يوم مع مدة زمنية محددة.
+  - تعديل وحذف المواد بسهولة.
 
 ### التقنيات المستخدمة
 - **الواجهة الأمامية (Frontend):** HTML, CSS, JavaScript الملفات الاساسية داخل فولدر `src-tauri/dist`.

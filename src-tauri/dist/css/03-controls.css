@@ -35,7 +35,10 @@
   transition: 0.3s;
 }
 
-#settingsBtn:hover { opacity: 0.85; background: rgba(255, 255, 255, 0.1); }
+#settingsBtn:hover {
+  opacity: 0.85;
+  background: rgba(255, 255, 255, 0.1);
+}
 
 input[type="range"],
 select {
@@ -44,5 +47,7 @@ select {
 }
 
 @media (max-width: 400px) {
-  #time { font-size: 36px; }
+  #time {
+    font-size: 36px;
+  }
 }

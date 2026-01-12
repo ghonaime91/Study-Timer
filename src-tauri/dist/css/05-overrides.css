@@ -18,13 +18,18 @@
   cursor: pointer;
 }
 
-.pomodoro-control { display: flex; align-items: center; gap: 8px; }
+.pomodoro-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
 /* Arabic rendering improvements for Glassy theme */
 body.rtl[data-theme="glassy"] {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
+
 body.rtl[data-theme="glassy"] .timer-box,
 body.rtl[data-theme="glassy"] .timer-box * {
   font-weight: 600;
@@ -33,14 +38,14 @@ body.rtl[data-theme="glassy"] .timer-box * {
 /* Soften button shadows in Glassy to improve text clarity */
 body.rtl[data-theme="glassy"] button {
   box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.25),
-              0 3px 5px rgba(0, 0, 0, 0.05);
+    0 3px 5px rgba(0, 0, 0, 0.05);
 }
 
 /* File input adjustments in Glassy */
 [data-theme="glassy"] #customFile {
-  padding: 6px 10px;   
-  line-height: 1.2;    
-  margin-top: 6px;    
+  padding: 6px 10px;
+  line-height: 1.2;
+  margin-top: 6px;
 }
 
 /* Ensure label has a small bottom margin to avoid sticking */

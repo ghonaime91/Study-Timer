@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/03-controls.css">
     <link rel="stylesheet" href="css/04-modals.css">
     <link rel="stylesheet" href="css/05-overrides.css">
+    <link rel="stylesheet" href="css/study-schedule.css">
 </head>
 
 <body>
@@ -149,14 +150,105 @@
                 <label for="autostartToggle" id="autostartLabel" style="margin: 0;" data-i18n="autostartLabel">Start with Windows</label>
             </div>
 
+            <button id="studyScheduleBtn" class="settings-btn" style="margin-bottom: 15px; width: 100%;" data-i18n="studyScheduleBtn">
+                📚 Study Schedule
+            </button>
+
             <button id="settingsOkBtn" data-i18n="modalOk">OK</button>
         </div>
     </div>
 
+    <!-- Study Schedule Modal -->
+    <div id="studyScheduleModal" class="modal">
+        <div class="modal-content">
+            <div class="study-modal-header">
+                <h3 id="studyScheduleTitle" data-i18n="studyScheduleTitle">Study Schedule</h3>
+                <button id="studyScheduleClose" class="close-btn" aria-label="Close">×</button>
+            </div>
+
+            <!-- Global Timer Display -->
+            <div class="global-timer-display">
+                <div class="timer-label" data-i18n="globalTimerLabel">Global Timer</div>
+                <div id="globalTimerDisplay" class="timer-time">00:00:00</div>
+                <div id="currentSessionInfo" class="current-session-info" data-i18n="currentSessionLabel">Current Session: None</div>
+            </div>
+
+            <!-- Session Form -->
+                <form id="sessionForm" class="session-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="sessionDay" data-i18n="dayLabel">Day</label>
+                            <select id="sessionDay" class="form-input">
+                                <option value="0" data-i18n="sunday">Sunday</option>
+                                <option value="1" data-i18n="monday">Monday</option>
+                                <option value="2" data-i18n="tuesday">Tuesday</option>
+                                <option value="3" data-i18n="wednesday">Wednesday</option>
+                                <option value="4" data-i18n="thursday">Thursday</option>
+                                <option value="5" data-i18n="friday">Friday</option>
+                                <option value="6" data-i18n="saturday">Saturday</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sessionSubject" data-i18n="subjectLabel">Subject</label>
+                            <input type="text" id="sessionSubject" class="form-input" data-i18n-placeholder="subjectPlaceholder" placeholder="Enter subject name">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="sessionStudyDuration" data-i18n="studyDurationLabel">Study Duration (min)</label>
+                            <input type="number" id="sessionStudyDuration" class="form-input" min="1" max="180" value="25">
+                        </div>
+                        <div class="form-group">
+                            <label for="sessionBreakDuration" data-i18n="breakDurationLabel">Break Duration (min)</label>
+                            <input type="number" id="sessionBreakDuration" class="form-input" min="1" max="60" value="5">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" id="addSessionBtn" class="btn btn-primary" data-i18n="addSession">Add Session</button>
+                        <button id="cancelEditBtn" class="btn btn-secondary" style="display: none;" data-i18n="cancelButton">Cancel</button>
+                    </div>
+                </form>
+
+            <!-- Sessions Table -->
+            <div class="sessions-container">
+                <div class="sessions-table-wrapper">
+                    <table id="sessionsTable" class="sessions-table">
+                        <thead>
+                            <tr>
+                                <th data-i18n="dayLabel">Day</th>
+                                <th data-i18n="subjectLabel">Subject</th>
+                                <th data-i18n="studyDurationLabel">Study Duration</th>
+                                <th data-i18n="breakDurationLabel">Break Duration</th>
+                                <th data-i18n="statusLabel">Status</th>
+                                <th data-i18n="actionsLabel">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sessionsTableBody">
+                            <tr class="no-sessions">
+                                <td colspan="6" data-i18n="noSessionsMessage">No sessions yet. Add one above</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Modal for Study Schedule -->
+    <div id="studyAlertModal" class="modal">
+        <div class="modal-content">
+            <p id="studyAlertText"></p>
+            <button id="studyAlertOkBtn" data-i18n="modalOk">OK</button>
+        </div>
+    </div>
     <script type="module" src="js/globals.js"></script>
+    <script type="module" src="js/localStorageChecker.js"></script>
     <script type="module" src="js/ui-settings.js"></script>
     <script type="module" src="js/sound.js"></script>
     <script type="module" src="js/timer.js"></script>
+    <script type="module" src="js/study-globals.js"></script>
+    <script type="module" src="js/study-schedule.js"></script>
     <script type="module" src="js/autostart.js"></script>
+
 </body>
 </html>

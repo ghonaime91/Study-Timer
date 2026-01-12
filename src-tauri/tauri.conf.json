@@ -39,10 +39,6 @@
     "windows": {
       "webviewInstallMode": {
         "type": "downloadBootstrapper"
-      },
-      "nsis": {
-        "languages": ["Arabic", "English"],
-        "displayLanguageSelector": true
       }
     }
   }

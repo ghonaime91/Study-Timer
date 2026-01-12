@@ -85,6 +85,18 @@ function updateUIText() {
     texts[app.currentLang].lightTheme;
   document.querySelector('option[value="glassy"]').textContent =
     texts[app.currentLang].glassyTheme;
+
+  // Study Schedule Button
+  if (document.getElementById("studyScheduleBtn")) {
+    document.getElementById("studyScheduleBtn").textContent =
+      texts[app.currentLang].studyScheduleBtn;
+  }
+
+  // Update Study Schedule if initialized
+  if (window.studySchedule) {
+    window.studySchedule.updateLocalizedText();
+    window.studySchedule.updateUI();
+  }
 }
 
 function applyTheme(theme) {
@@ -133,6 +145,28 @@ function loadSettings() {
 loadSettings();
 updateUIText();
 
+
+// ---------- Update localStorage on sound changes only ---------- //
+dom.soundType.addEventListener("change", () => {
+  localStorage.setItem("soundType", dom.soundType.value);
+});
+
+dom.freq.addEventListener("input", () => {
+  localStorage.setItem("freq", dom.freq.value);
+});
+
+dom.volume.addEventListener("input", () => {
+  localStorage.setItem("volume", dom.volume.value);
+});
+
+dom.customFile.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  localStorage.setItem("customFileName", file.name);
+});
+
+
+
 // Listeners for UI settings
 dom.langSelect.addEventListener("change", () => {
   updateUIText();
@@ -147,6 +181,22 @@ dom.themeSelect.addEventListener("change", () => {
 dom.settingsBtn.addEventListener("click", () => {
   dom.settingsModal.style.display = "flex";
 });
+
+// Study Schedule Modal open/close
+if (document.getElementById("studyScheduleBtn")) {
+  document.getElementById("studyScheduleBtn").addEventListener("click", () => {
+    // Wait for study schedule to be initialized
+    const tryShowModal = () => {
+      if (window.studySchedule && window.studySchedule.showModal) {
+        window.studySchedule.showModal();
+      } else {
+        // Retry after a short delay
+        setTimeout(tryShowModal, 100);
+      }
+    };
+    tryShowModal();
+  });
+}
 
 dom.settingsOkBtn.addEventListener("click", () => {
   dom.settingsModal.style.display = "none";

@@ -92,13 +92,29 @@ button {
   color: #fff;
 }
 
-.start { background: var(--btn-start-bg); }
-.stop { background: var(--btn-stop-bg); }
-.reset { background: var(--btn-reset-bg); }
-.test { background: var(--btn-test-bg); }
-.mute { background: var(--btn-mute-bg); }
+.start {
+  background: var(--btn-start-bg);
+}
 
-button:hover { opacity: 0.85; }
+.stop {
+  background: var(--btn-stop-bg);
+}
+
+.reset {
+  background: var(--btn-reset-bg);
+}
+
+.test {
+  background: var(--btn-test-bg);
+}
+
+.mute {
+  background: var(--btn-mute-bg);
+}
+
+button:hover {
+  opacity: 0.85;
+}
 
 hr {
   border: none;
@@ -107,4 +123,6 @@ hr {
   margin: 18px 0;
 }
 
-.control { margin-bottom: 12px; }
+.control {
+  margin-bottom: 12px;
+}
