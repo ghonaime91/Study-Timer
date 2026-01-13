@@ -42,6 +42,7 @@ export const dom = {
   pomoLong: document.getElementById("pomoLong"),
   pomoCycles: document.getElementById("pomoCycles"),
   pomoOkBtn: document.getElementById("pomoOkBtn"),
+  pomoCancelBtn: document.getElementById("pomoCancelBtn"),
   pomodoroModal: document.getElementById("pomodoroModal"),
 
   langSelect: document.getElementById("langSelect"),

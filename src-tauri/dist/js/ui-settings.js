@@ -19,6 +19,7 @@ function updateUIText() {
   dom.pomodoroModal.querySelector('label[for="pomoCycles"]').textContent =
     texts[app.currentLang].cyclesLabel;
   dom.pomoOkBtn.textContent = texts[app.currentLang].modalOk;
+  dom.pomoCancelBtn.textContent = texts[app.currentLang].cancelButton;
 
   // Settings modal text
   dom.settingsModal.querySelector("h3").textContent =

@@ -72,6 +72,10 @@
   background: #2ecc71;
 }
 
+#pomoCancelBtn {
+  margin-left: 10px;
+}
+
 /* Settings Modal */
 #settingsModal {
   background: rgba(0, 0, 0, 0.5);

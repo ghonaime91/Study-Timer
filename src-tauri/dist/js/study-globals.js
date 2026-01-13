@@ -162,7 +162,7 @@ export const studyTexts = {
   en: {
     studyScheduleTitle: 'Study Schedule',
     addSession: 'Add Session',
-    editSession: 'Edit Session',
+    editSession: 'Edit',
     deleteSession: 'Delete',
     startSession: 'Start',
     pauseSession: 'Pause',
@@ -200,7 +200,7 @@ export const studyTexts = {
   ar: {
     studyScheduleTitle: 'جدول الدراسة',
     addSession: 'إضافة جلسة',
-    editSession: 'تعديل الجلسة',
+    editSession: 'تعديل ',
     deleteSession: 'حذف',
     startSession: 'ابدأ',
     pauseSession: 'أوقف',

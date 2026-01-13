@@ -26,6 +26,10 @@ function startTimerReal(callbackEnd = null, ignoreInput = false, resume = false)
     localStorage.setItem("timerEndTime", app.endTime.toString());
   }
 
+  // Clear any leftover paused state so a fresh start doesn't keep old paused data
+  localStorage.removeItem("timerRemaining");
+  localStorage.removeItem("timerStopped");
+
   localStorage.setItem("timerRunning", "true");
 
   if (callbackEnd) localStorage.setItem("timerCallback", "pomodoro");
@@ -33,7 +37,7 @@ function startTimerReal(callbackEnd = null, ignoreInput = false, resume = false)
 
   // Clear any previous interval to prevent duplicates
   clearInterval(app.timer);
-  app.running = true;
+  app.running = true; 
 
   function checkTime() {
     if (!app.running) return;
@@ -71,21 +75,57 @@ function startTimerReal(callbackEnd = null, ignoreInput = false, resume = false)
 function stopTimer() {
   clearInterval(app.timer);
   app.running = false;
+  // Save remaining seconds and mark as stopped so we can resume after a refresh
+  localStorage.setItem("timerRemaining", String(app.totalSeconds));
+  localStorage.setItem("timerStopped", "true");
+  // Remove absolute end time but keep remaining - also mark running as false
   localStorage.removeItem("timerEndTime");
-  localStorage.removeItem("timerRunning");
-  localStorage.removeItem("timerCallback");
+  localStorage.setItem("timerRunning", "false");
   if(!dom.pomodoroCycle.checked) localStorage.removeItem("pomodoroState");
-}
+} 
 
 function resetTimer() {
   stopTimer();
   app.totalSeconds = 0;
   updateDisplay();
   dom.hours.value = dom.minutes.value = "";
+  // Fully clear any saved timer state
+  localStorage.removeItem("timerRemaining");
+  localStorage.removeItem("timerStopped");
+  localStorage.removeItem("timerRunning");
+  localStorage.removeItem("timerEndTime");
+  localStorage.removeItem("timerCallback");
   localStorage.removeItem("pomodoroState");
-}
+} 
 
 /* ===== Start Pomodoro Cycle ===== */
+function pomodoroNextSession() {
+  if (!dom.pomodoroCycle.checked) return;
+  const settings = (app.pomodoroState && app.pomodoroState.settings) ? app.pomodoroState.settings : { workMinutes: 25, shortBreak: 5, longBreak: 15, maxCycles: 4 };
+  if (!app.pomodoroState) app.pomodoroState = { session: "work", cycle: 0 };
+
+  if (app.pomodoroState.session === "work") {
+    app.pomodoroState.cycle++;
+
+    if (app.pomodoroState.cycle >= settings.maxCycles) {
+      app.totalSeconds = settings.longBreak * 60;
+      app.pomodoroState.session = "longBreak";
+      app.pomodoroState.cycle = 0;
+    } else {
+      app.totalSeconds = settings.shortBreak * 60;
+      app.pomodoroState.session = "break";
+    }
+  } else if (app.pomodoroState.session === "break" || app.pomodoroState.session === "longBreak") {
+    app.totalSeconds = settings.workMinutes * 60;
+    app.pomodoroState.session = "work";
+  }
+
+  app.endTime = Date.now() + app.totalSeconds * 1000;
+  updateDisplay();
+  localStorage.setItem("pomodoroState", JSON.stringify(app.pomodoroState));
+  startTimerReal(pomodoroNextSession, true);
+}
+
 function startPomodoroCycle(workMinutes=25, shortBreak=5, longBreak=15, maxCycles=4) {
   if(!app.pomodoroState) app.pomodoroState = { session:"work", cycle:0 };
 
@@ -98,45 +138,8 @@ function startPomodoroCycle(workMinutes=25, shortBreak=5, longBreak=15, maxCycle
   updateDisplay();
   localStorage.setItem("pomodoroState", JSON.stringify(app.pomodoroState));
 
-function nextSession() {
-  if(!dom.pomodoroCycle.checked) return; // Stop if Pomodoro is disabled
-
-  const settings = app.pomodoroState.settings;
-
-  if(app.pomodoroState.session === "work") {
-    // Finished work session
-    app.pomodoroState.cycle++; 
-
-    if(app.pomodoroState.cycle >= settings.maxCycles) {
-      // Last work session completed → long break
-      app.totalSeconds = settings.longBreak*60;
-      app.pomodoroState.session = "longBreak";
-      // reset for next Pomodoro round
-      app.pomodoroState.cycle = 0; 
-    } else {
-      // Normal work session → short break
-      app.totalSeconds = settings.shortBreak*60;
-      app.pomodoroState.session = "break";
-    }
-
-  } else if(app.pomodoroState.session === "break") {
-    // After short break → start next work session
-    app.totalSeconds = settings.workMinutes*60;
-    app.pomodoroState.session = "work";
-  } else if(app.pomodoroState.session === "longBreak") {
-    // After long break → start fresh work session
-    app.totalSeconds = settings.workMinutes*60;
-    app.pomodoroState.session = "work";
-  }
-
   app.endTime = Date.now() + app.totalSeconds*1000;
-  updateDisplay();
-  localStorage.setItem("pomodoroState", JSON.stringify(app.pomodoroState));
-  startTimerReal(nextSession,true);
-}
-
-  app.endTime = Date.now() + app.totalSeconds*1000;
-  startTimerReal(nextSession,true);
+  startTimerReal(pomodoroNextSession,true);
 }
 
 function loadPomodoroSettings() {
@@ -153,10 +156,20 @@ dom.pomodoroCycle.addEventListener("change", ()=>{
     loadPomodoroSettings(); 
     dom.pomodoroModal.style.display = "flex";
   } else {
+    // Stop pomodoro and clear runtime state, but KEEP the last form inputs in localStorage
     stopTimer();
     app.totalSeconds = 0;
     updateDisplay();
+    // Hide modal
+    if (dom.pomodoroModal) dom.pomodoroModal.style.display = "none";
+
+    // Remove only runtime pomodoro state (session/cycle) but do NOT remove saved settings
     localStorage.removeItem("pomodoroState");
+
+    // Remove any pomodoro callback/paused state so it won't resume automatically
+    localStorage.removeItem("timerCallback");
+    localStorage.removeItem("timerRemaining");
+    localStorage.removeItem("timerStopped");
   }
 });
 
@@ -173,6 +186,13 @@ dom.pomoOkBtn.addEventListener("click", ()=>{
   localStorage.setItem("pomoCycles", dom.pomoCycles.value);
 
   startPomodoroCycle(+dom.pomoWork.value, +dom.pomoShort.value, +dom.pomoLong.value, +dom.pomoCycles.value);
+});
+
+
+dom.pomoCancelBtn.addEventListener("click",()=>{
+
+  dom.pomodoroCycle.checked = false;
+  dom.pomodoroModal.style.display = "none";
 });
 
 /* ===== Notifications ===== */
@@ -205,6 +225,8 @@ dom.alertOkBtn.addEventListener("click",closeModal);
 function resumeTimerOnLoad() {
   const savedEndTime = localStorage.getItem("timerEndTime");
   const savedRunning = localStorage.getItem("timerRunning");
+  const savedRemaining = localStorage.getItem("timerRemaining");
+  const savedStopped = localStorage.getItem("timerStopped");
 
   if (savedEndTime && savedRunning === "true") {
     const savedPomodoroState = localStorage.getItem("pomodoroState");
@@ -227,8 +249,15 @@ function resumeTimerOnLoad() {
       localStorage.removeItem("timerCallback");
       localStorage.removeItem("pomodoroState");
       dom.pomodoroCycle.checked = false;
-      beep();
-      showModal(texts[app.currentLang].alertFinished);
+      // If a study schedule exists, let it handle notifications and modals — do not show external modal
+      if (!localStorage.getItem("studyScheduleData")) {
+        beep();
+        showModal(texts[app.currentLang].alertFinished);
+      } else {
+        // Ensure any external paused flags are cleared so external timer stays quiet
+        localStorage.removeItem("timerRemaining");
+        localStorage.removeItem("timerStopped");
+      }
     } else {
       // Timer still running, resume
       app.totalSeconds = remaining;
@@ -238,25 +267,42 @@ function resumeTimerOnLoad() {
       const hasCallback = localStorage.getItem("timerCallback") === "pomodoro";
 
       if (hasCallback && dom.pomodoroCycle.checked) {
-        startTimerReal(() => {
-          if (dom.pomodoroCycle.checked) {
-            const settings = app.pomodoroState.settings || {
-              workMinutes: 25,
-              shortBreak: 5,
-              longBreak: 15,
-              maxCycles: 4,
-            };
-            startPomodoroCycle(
-              settings.workMinutes,
-              settings.shortBreak,
-              settings.longBreak,
-              settings.maxCycles
-            );
-          }
-        }, true, true);
+        startTimerReal(pomodoroNextSession, true, true);
       } else {
         startTimerReal(null, true, true);
       }
+    }
+  } else if (savedRemaining && savedStopped === "true") {
+    const remaining = parseInt(savedRemaining);
+    const savedPomodoroState = localStorage.getItem("pomodoroState");
+
+    if (savedPomodoroState) {
+      // Restore Pomodoro state configuration but do NOT auto-start
+      app.pomodoroState = JSON.parse(savedPomodoroState);
+      dom.pomodoroCycle.checked = true;
+    }
+
+    if (remaining <= 0) {
+      app.totalSeconds = 0;
+      updateDisplay();
+      localStorage.removeItem("timerRemaining");
+      localStorage.removeItem("timerStopped");
+      localStorage.removeItem("timerRunning");
+      localStorage.removeItem("timerCallback");
+      if (!dom.pomodoroCycle.checked) localStorage.removeItem("pomodoroState");
+      // If study schedule exists, let it handle the completion modal/notification
+      if (!localStorage.getItem("studyScheduleData")) {
+        beep();
+        showModal(texts[app.currentLang].alertFinished);
+      }
+    } else {
+      // Keep timer stopped at the saved remaining seconds; do NOT auto-resume.
+      app.totalSeconds = remaining;
+      updateDisplay();
+      // Ensure we are marked as stopped
+      app.running = false;
+      localStorage.setItem("timerRunning", "false");
+      // Leave timerRemaining and timerStopped in localStorage so user can press Start to resume
     }
   }
 }
@@ -273,6 +319,8 @@ setInterval(()=>{
   const savedEndTime = localStorage.getItem("timerEndTime");
   const savedRunning = localStorage.getItem("timerRunning");
   if(savedEndTime && savedRunning==="true"){
+    // If a study schedule exists, skip external beep as the schedule will handle notifications
+    if (localStorage.getItem("studyScheduleData")) return;
     const now = Date.now();
     const savedEnd = parseInt(savedEndTime);
     if(now>=savedEnd) beep();
@@ -282,7 +330,12 @@ setInterval(()=>{
 /* ===== Control Buttons ===== */
 document.getElementById("startBtn").addEventListener("click",()=>{
   if("Notification" in window && Notification.permission==="default") Notification.requestPermission();
-  startTimerReal();
+  const hasCallback = localStorage.getItem("timerCallback") === "pomodoro";
+  if (hasCallback && dom.pomodoroCycle.checked) {
+    startTimerReal(pomodoroNextSession);
+  } else {
+    startTimerReal();
+  }
 });
 document.getElementById("stopBtn").addEventListener("click",()=>stopTimer());
 document.getElementById("resetBtn").addEventListener("click",()=>{

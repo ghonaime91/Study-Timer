@@ -15,16 +15,17 @@
 .study-modal-content {
   background-color: var(--modal-bg, #fff);
   color: var(--modal-text, #000);
-  margin: 2% auto;
-  padding: 0;
+  margin: 1.5% auto;
+  padding: 8px;
   border-radius: 12px;
-  width: 90%;
-  max-width: 900px;
-  max-height: 90vh;
+  width: 95%;
+  max-width: 1100px;
+  max-height: 95vh;
+  height: auto;
   display: flex;
   flex-direction: column;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 /* Modal Header */
@@ -104,15 +105,22 @@
 
 /* Session Form */
 .session-form {
-  padding: 25px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  /* ensure the form is always visible */
+  min-height: 120px;
+  max-height: 240px;
+  overflow-y: auto;
+  /* don't shrink when container resizes */
+  flex: 0 0 auto;
+  background: transparent;
 }
 
 .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 20px;
+  grid-template-columns: 1fr 0.6fr;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .form-group {
@@ -128,10 +136,10 @@
 }
 
 .form-input {
-  padding: 12px 15px;
-  border: 2px solid rgba(0, 0, 0, 0.1);
+  padding: 8px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 13px;
   background-color: var(--input-bg, #fff);
   color: var(--input-text, #000);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -228,12 +236,12 @@
 
 /* Sessions Container */
 .sessions-container {
-  flex: 1;
-  overflow: visible;
+  flex: 1 1 auto;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  min-height: 200px;
+  align-items: stretch;
+  min-height: 50vh;
   min-width: 0;
   width: 100%;
   box-sizing: border-box;
@@ -242,30 +250,40 @@
 .sessions-table-wrapper {
   overflow-x: auto;
   overflow-y: auto;
-  flex: 1;
-  margin: 10px auto;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  flex: 1 1 auto;
+  margin: 10px 20px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 8px;
   background: var(--modal-bg, #fff);
-  min-height: 150px;
-  width: calc(100% - 20px);
+  min-height: 35vh;
+  width: calc(100% - 40px);
   max-width: 100%;
   display: block;
   /* Ensure scrollbar is visible and usable */
   -webkit-overflow-scrolling: touch;
-  /* Ensure scrollbar has space */
-  padding-bottom: 5px;
+  padding: 8px;
   box-sizing: border-box;
 }
 
 /* Sessions Table */
 .sessions-table {
   width: 100%;
-  min-width: 800px;
+  min-width: 0;
+  /* allow cells to wrap and keep layout stable */
+  table-layout: fixed;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 15px;
   background: var(--modal-bg, #fff);
   color: var(--modal-text, #000);
+  word-break: break-word;
+}
+
+.sessions-table td {
+  padding: 14px 10px;
+}
+
+.sessions-table th {
+  padding: 14px 10px;
 }
 
 .sessions-table th {
@@ -277,7 +295,9 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  white-space: nowrap;
+  /* allow wrapping for small screens */
+  white-space: normal;
+  word-break: break-word;
 }
 
 .sessions-table td {
@@ -347,7 +367,7 @@
 /* Action Buttons in Table */
 .action-buttons {
   display: flex;
-  gap: 5px;
+  gap: 10px;
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
@@ -391,11 +411,156 @@
 
   .form-row {
     grid-template-columns: 1fr;
-    gap: 15px;
+    gap: 12px;
   }
 
   .timer-time {
     font-size: 2em;
+  }
+
+  .sessions-table-wrapper {
+    max-height: calc(95vh - 220px);
+    min-height: 30vh;
+    margin: 8px 12px;
+    padding: 6px;
+  }
+}
+
+/* Card view for screens narrower than 1052px */
+@media (max-width: 1052px) {
+  .sessions-table thead {
+    display: none;
+  }
+
+  .sessions-table tbody tr {
+    display: block;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 8px;
+    background: var(--modal-bg, #fff);
+  }
+
+  .sessions-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 8px;
+  }
+
+  .sessions-table tbody td::before {
+    content: attr(data-label) ": ";
+    font-weight: 600;
+    margin-right: 8px;
+    color: var(--modal-text, #000);
+    width: 40%;
+  }
+
+  .action-buttons {
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+
+  .session-form {
+    min-height: 110px;
+    max-height: 240px;
+  }
+
+  .sessions-table-wrapper {
+    max-height: calc(90vh - 220px);
+    padding-top: 10px;
+  }
+}
+
+/* Mobile (compact card) view for very small screens */
+@media (max-width: 600px) {
+  .sessions-table thead {
+    display: none;
+  }
+
+  .sessions-table tbody tr {
+    display: block;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    margin-bottom: 12px;
+    padding: 8px;
+    border-radius: 8px;
+  }
+
+  .sessions-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 6px;
+  }
+
+  .sessions-table tbody td::before {
+    content: attr(data-label) ": ";
+    font-weight: 600;
+    margin-right: 8px;
+    color: var(--modal-text, #000);
+  }
+
+  .action-buttons {
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+
+  @media (min-width: 601px) and (max-width: 1024px) {
+
+    /* Tablet-specific adjustments */
+    .study-modal-content {
+      width: 94%;
+      max-width: 1000px;
+      max-height: 92vh;
+      padding: 10px;
+    }
+
+    .form-row {
+      grid-template-columns: 1fr 0.8fr;
+      gap: 12px;
+    }
+
+    .session-form {
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .sessions-table-wrapper {
+      max-height: calc(92vh - 240px);
+      min-height: 45vh;
+      margin: 12px 20px;
+      padding: 10px;
+    }
+
+    .sessions-table {
+      font-size: 15px;
+    }
+
+    .sessions-table td,
+    .sessions-table th {
+      padding: 16px 12px;
+    }
+
+    .action-buttons .btn {
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    .btn {
+      padding: 10px 18px;
+    }
+
+    .timer-time {
+      font-size: 2.2em;
+    }
+  }
+
+  @media (min-width: 769px) {
+    .sessions-table-wrapper {
+      max-height: calc(90vh - 260px);
+      min-height: 40vh;
+      margin: 10px 24px;
+    }
   }
 
   /* Ensure horizontal and vertical scrolling */

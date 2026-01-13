@@ -25,7 +25,9 @@ class StudyScheduleManager {
     this.loadFromStorage();
     this.setupEventListeners();
     this.updateUI();
-    this.startUpdateLoop();
+    // Start the specific timer interval if needed,
+    // but do NOT start the full UI update loop
+    // this.startUpdateLoop(); 
 
     // Request notification permission
     if (
@@ -91,9 +93,12 @@ class StudyScheduleManager {
     }
 
     // Modal controls
-    this.domElements.studyScheduleBtn?.addEventListener("click", () =>
+    this.domElements.studyScheduleBtn?.addEventListener("click", () => {
+      
+      dom.settingsModal.style.display = "none";
+
       this.showModal()
-    );
+    });
     this.domElements.studyScheduleClose?.addEventListener("click", () =>
       this.hideModal()
     );
@@ -235,7 +240,6 @@ class StudyScheduleManager {
 
     studyState.timerState.globalTimer.isPaused = false;
 
-    // Restore target time from remaining
     const now = Date.now();
     const remainingMS = studyState.timerState.globalTimer.remainingTimeMS || 0;
     studyState.timerState.globalTimer.targetTime = now + remainingMS;
@@ -246,6 +250,11 @@ class StudyScheduleManager {
     if (session) {
       session.status = SessionStatus.RUNNING;
     }
+
+    if (!this.timerInterval) {
+      this.timerInterval = setInterval(() => this.updateTimer(), 1000);
+    }
+    this.updateTimer();
 
     this.saveToStorage();
     this.updateUI();
@@ -397,8 +406,22 @@ class StudyScheduleManager {
   }
 
   completeStudyPhase(session) {
-    // 1. Stop timer
+    // 1. Stop timer (internal)
     this.stopTimer(true); // Reset state
+
+    // Also stop external main timer and reset its display/state
+    try {
+      stopMainTimer();
+    } catch (e) {
+      // ignore if not available
+    }
+    if (dom.timeEl) dom.timeEl.textContent = "00:00:00";
+    // Clean up main timer storage so it won't restart unexpectedly
+    localStorage.removeItem("timerEndTime");
+    localStorage.removeItem("timerRunning");
+    localStorage.removeItem("timerCallback");
+    localStorage.removeItem("timerRemaining");
+    localStorage.removeItem("timerStopped");
 
     // 2. Play sound
     playSound();
@@ -429,8 +452,21 @@ class StudyScheduleManager {
     session.totalStudyTime += session.studyDuration * 60;
     session.currentTime = 0;
 
-    // 2. Stop timer
+    // 2. Stop timer (internal)
     this.stopTimer(true);
+
+    // Also stop external main timer and reset display/state
+    try {
+      stopMainTimer();
+    } catch (e) {
+      // ignore
+    }
+    if (dom.timeEl) dom.timeEl.textContent = "00:00:00";
+    localStorage.removeItem("timerEndTime");
+    localStorage.removeItem("timerRunning");
+    localStorage.removeItem("timerCallback");
+    localStorage.removeItem("timerRemaining");
+    localStorage.removeItem("timerStopped");
 
     // 3. Play sound
     playSound();
@@ -490,8 +526,8 @@ class StudyScheduleManager {
   addSession() {
     const day = parseInt(this.domElements.sessionDay.value);
     const subject = this.domElements.sessionSubject.value.trim();
-    const studyDuration = parseInt(this.domElements.sessionStudyDuration.value);
-    const breakDuration = parseInt(this.domElements.sessionBreakDuration.value);
+    const studyDuration = parseFloat(this.domElements.sessionStudyDuration.value);
+    const breakDuration = parseFloat(this.domElements.sessionBreakDuration.value);
 
     // Validation
     if (!this.validateSession(subject, studyDuration)) {
@@ -538,14 +574,8 @@ updateSession(sessionId) {
 
   const day = parseInt(this.domElements.sessionDay.value);
   const subject = this.domElements.sessionSubject.value.trim();
-  const studyDuration = parseInt(this.domElements.sessionStudyDuration.value);
-  const breakDuration = parseInt(this.domElements.sessionBreakDuration.value);
-
-  // Validation
-  if (!this.validateSession(subject, studyDuration)) return;
-
-  // Update session data
-  session.day = day;
+  const studyDuration = parseFloat(this.domElements.sessionStudyDuration.value);
+  const breakDuration = parseFloat(this.domElements.sessionBreakDuration.value);
   session.subject = subject;
   session.studyDuration = studyDuration;
   session.breakDuration = breakDuration;
@@ -633,7 +663,8 @@ deleteSession(sessionId) {
       return false;
     }
 
-    if (studyDuration <= 0) {
+    // Accept decimal durations; ensure value is a finite number and > 0
+    if (typeof studyDuration !== 'number' || !isFinite(studyDuration) || studyDuration <= 0) {
       this.showAlert(studyUtils.getText("durationRequired"));
       return false;
     }
@@ -754,12 +785,12 @@ updateSessionsTable() {
     );
 
     row.innerHTML = `
-      <td>${dayName}</td>
-      <td>${session.subject}</td>
-      <td>${session.studyDuration} min</td>
-      <td>${session.breakDuration} min</td>
-      <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-      <td>
+      <td data-label="${studyUtils.getText('dayLabel')}">${dayName}</td>
+      <td data-label="${studyUtils.getText('subjectLabel')}">${session.subject}</td>
+      <td data-label="${studyUtils.getText('studyDurationLabel')}">${session.studyDuration} min</td>
+      <td data-label="${studyUtils.getText('breakDurationLabel')}">${session.breakDuration} min</td>
+      <td data-label="${studyUtils.getText('statusLabel')}"><span class="status-badge ${statusClass}">${statusText}</span></td>
+      <td data-label="${studyUtils.getText('actionsLabel')}">
         <div class="action-buttons">
           ${this.getActionButtons(session)}
         </div>
@@ -1067,18 +1098,10 @@ clearForm() {
     }
   }
 
-  startUpdateLoop() {
-    this.updateInterval = setInterval(() => {
-      this.updateUI();
-    }, 1000);
-  }
 
   destroy() {
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
-    }
-    if (this.updateInterval) {
-      clearInterval(this.updateInterval);
     }
   }
 }
