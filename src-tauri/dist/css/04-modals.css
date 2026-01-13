@@ -229,7 +229,7 @@
 
 #studyScheduleModal .btn-primary {
   background: var(--btn-start-bg, #2ecc71);
-  color: #ebeef1;
+  /* color: #ebeef1; */
 }
 
 #studyScheduleModal .btn-secondary {
