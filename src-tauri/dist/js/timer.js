@@ -98,40 +98,43 @@ function startPomodoroCycle(workMinutes=25, shortBreak=5, longBreak=15, maxCycle
   updateDisplay();
   localStorage.setItem("pomodoroState", JSON.stringify(app.pomodoroState));
 
-  function nextSession() {
-    if(!dom.pomodoroCycle.checked) return; // Stop if Pomodoro is disabled
+function nextSession() {
+  if(!dom.pomodoroCycle.checked) return; // Stop if Pomodoro is disabled
 
-    const settings = app.pomodoroState.settings;
+  const settings = app.pomodoroState.settings;
 
-    if(app.pomodoroState.session === "work") {
-      // Finished work session, go to short break
+  if(app.pomodoroState.session === "work") {
+    // Finished work session
+    app.pomodoroState.cycle++; 
+
+    if(app.pomodoroState.cycle >= settings.maxCycles) {
+      // Last work session completed → long break
+      app.totalSeconds = settings.longBreak*60;
+      app.pomodoroState.session = "longBreak";
+      // reset for next Pomodoro round
+      app.pomodoroState.cycle = 0; 
+    } else {
+      // Normal work session → short break
       app.totalSeconds = settings.shortBreak*60;
       app.pomodoroState.session = "break";
-    } else if(app.pomodoroState.session === "break") {
-      // Finished short break
-      app.pomodoroState.cycle++; // increment completed cycle (Work + Short Break)
-      
-      if(app.pomodoroState.cycle >= settings.maxCycles) {
-        // If reached max cycles, start long break
-        app.totalSeconds = settings.longBreak*60;
-        app.pomodoroState.session = "longBreak";
-        app.pomodoroState.cycle = 0; // reset cycle counter after long break
-      } else {
-        // Start next work session
-        app.totalSeconds = settings.workMinutes*60;
-        app.pomodoroState.session = "work";
-      }
-    } else if(app.pomodoroState.session === "longBreak") {
-      // After long break, start new work session
-      app.totalSeconds = settings.workMinutes*60;
-      app.pomodoroState.session = "work";
     }
 
-    app.endTime = Date.now() + app.totalSeconds*1000;
-    updateDisplay();
-    localStorage.setItem("pomodoroState", JSON.stringify(app.pomodoroState));
-    startTimerReal(nextSession,true);
+  } else if(app.pomodoroState.session === "break") {
+    // After short break → start next work session
+    app.totalSeconds = settings.workMinutes*60;
+    app.pomodoroState.session = "work";
+  } else if(app.pomodoroState.session === "longBreak") {
+    // After long break → start fresh work session
+    app.totalSeconds = settings.workMinutes*60;
+    app.pomodoroState.session = "work";
   }
+
+  app.endTime = Date.now() + app.totalSeconds*1000;
+  updateDisplay();
+  localStorage.setItem("pomodoroState", JSON.stringify(app.pomodoroState));
+  startTimerReal(nextSession,true);
+}
+
 
   app.endTime = Date.now() + app.totalSeconds*1000;
   startTimerReal(nextSession,true);
