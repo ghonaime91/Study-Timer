@@ -1,14 +1,5 @@
 # Study Timer / مؤقت المذاكرة
 
-## ⚠ Antivirus Note / ملاحظة مضاد الفيروسات
-
-### English
-During installation or the first run, your antivirus may take a few seconds to scan the application. This is normal behavior. Please allow it to finish — the program is completely safe and contains no harmful software.
-
-### العربية
-أثناء التثبيت أو عند التشغيل لأول مرة، قد يأخذ برنامج مكافحة الفيروسات بضع ثوانٍ لفحص التطبيق. هذا سلوك طبيعي. يُرجى الانتظار حتى ينتهي الفحص — البرنامج آمن تمامًا ولا يحتوي على أي برمجيات ضارة.
-
-
 ##  English Description
 
 ### Overview
@@ -138,7 +129,10 @@ During installation or the first run, your antivirus may take a few seconds to s
 
 ## ⬇️ Download / تحميل
 
-### English
+### ⚠ Antivirus Note 
+During installation or the first run, your antivirus may take a few seconds to scan the application. This is normal behavior. Please allow it to finish — the program is completely safe and contains no harmful software.
+
+
 Get the latest version of **Study Timer**:
 
 👉 [Download latest release](https://github.com/ghonaime91/Study-Timer/releases/latest)
@@ -149,7 +143,9 @@ Get the latest version of **Study Timer**:
 
 ---
 
-### العربية
+### ⚠ ملحوظة مضاد الفيروسات 
+أثناء التثبيت أو عند التشغيل لأول مرة، قد يأخذ برنامج مكافحة الفيروسات بضع ثوانٍ لفحص التطبيق. هذا سلوك طبيعي. يُرجى الانتظار حتى ينتهي الفحص — البرنامج آمن تمامًا ولا يحتوي على أي برمجيات ضارة.
+
 احصل على آخر نسخة من **مؤقت المذاكرة**:
 
 👉 [اضغط هنا لتحميل آخر إصدار](https://github.com/ghonaime91/Study-Timer/releases/latest)
