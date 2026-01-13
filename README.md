@@ -124,6 +124,7 @@
   <img src="screenshots/pomodro-en.jpg" width="150" alt="Pomodoro">
   <img src="screenshots/glassy-theme.jpg" width="150" alt="Settings">
   <img src="screenshots/ar.jpg" width="150" alt="Arabic UI">
+  <img src="screenshots/schedule.jpg" width="300" alt="schedule">
 </p>
 
 ## ⬇️ Download / تحميل
