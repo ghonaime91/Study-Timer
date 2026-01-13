@@ -135,7 +135,6 @@ function nextSession() {
   startTimerReal(nextSession,true);
 }
 
-
   app.endTime = Date.now() + app.totalSeconds*1000;
   startTimerReal(nextSession,true);
 }
