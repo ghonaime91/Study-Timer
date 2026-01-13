@@ -1,5 +1,14 @@
 # Study Timer / مؤقت المذاكرة
 
+## ⚠ Antivirus Note / ملاحظة مضاد الفيروسات
+
+### English
+During installation or the first run, your antivirus may take a few seconds to scan the application. This is normal behavior. Please allow it to finish — the program is completely safe and contains no harmful software.
+
+### العربية
+أثناء التثبيت أو عند التشغيل لأول مرة، قد يأخذ برنامج مكافحة الفيروسات بضع ثوانٍ لفحص التطبيق. هذا سلوك طبيعي. يُرجى الانتظار حتى ينتهي الفحص — البرنامج آمن تمامًا ولا يحتوي على أي برمجيات ضارة.
+
+
 ##  English Description
 
 ### Overview
