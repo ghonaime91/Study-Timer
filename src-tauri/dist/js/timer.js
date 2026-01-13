@@ -139,10 +139,20 @@ function nextSession() {
   startTimerReal(nextSession,true);
 }
 
+function loadPomodoroSettings() {
+  dom.pomoWork.value   = localStorage.getItem("pomoWork")   || 25;
+  dom.pomoShort.value  = localStorage.getItem("pomoShort")  || 5;
+  dom.pomoLong.value   = localStorage.getItem("pomoLong")   || 15;
+  dom.pomoCycles.value = localStorage.getItem("pomoCycles") || 4;
+}
+
+
 /* ===== Pomodoro UI Events ===== */
 dom.pomodoroCycle.addEventListener("change", ()=>{
-  if(dom.pomodoroCycle.checked) dom.pomodoroModal.style.display = "flex";
-  else {
+  if(dom.pomodoroCycle.checked) {
+    loadPomodoroSettings(); 
+    dom.pomodoroModal.style.display = "flex";
+  } else {
     stopTimer();
     app.totalSeconds = 0;
     updateDisplay();
