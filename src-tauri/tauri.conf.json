@@ -24,7 +24,7 @@
         "maxHeight": 770,
         "center": false,
         "fullscreen": false,
-        "alwaysOnTop": true,
+        "alwaysOnTop": false,
         "visible": false
       }
     ],
