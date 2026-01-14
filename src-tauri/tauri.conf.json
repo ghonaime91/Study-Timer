@@ -22,8 +22,10 @@
         "maxWidth": 400,
         "minHeight": 770,
         "maxHeight": 770,
-        "center": true,
-        "fullscreen": false
+        "center": false,
+        "fullscreen": false,
+        "alwaysOnTop": true,
+        "visible": false
       }
     ],
     "security": {
