@@ -17,13 +17,19 @@ fn show_notification(app: tauri::AppHandle, title: String, body: String) {
 }
 
 fn main() {
-    tauri::Builder::default()
-    .plugin(tauri_plugin_autostart::init(
-        tauri_plugin_autostart::MacosLauncher::LaunchAgent,
-        None,
-    ))
-    .plugin(tauri_plugin_notification::init())
-    .invoke_handler(tauri::generate_handler![show_notification])
+    let builder = tauri::Builder::default()
+        .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+            if let Some(window) = app.get_webview_window("main") {
+                let _ = window.show();
+                let _ = window.set_focus();
+            }
+        }))
+        .plugin(tauri_plugin_autostart::init(
+            tauri_plugin_autostart::MacosLauncher::LaunchAgent,
+            None,
+        ))
+        .plugin(tauri_plugin_notification::init())
+        .invoke_handler(tauri::generate_handler![show_notification])
         .setup(|app| {
             let show_i = MenuItemBuilder::with_id("show", "Show").build(app)?;
             let quit_i = MenuItemBuilder::with_id("quit", "Exit").build(app)?;
@@ -73,7 +79,9 @@ fn main() {
             });
 
             Ok(())
-        })
+        });
+
+    builder
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
