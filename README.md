@@ -34,7 +34,12 @@
 ### Tech Stack
 - **Frontend:** HTML, CSS, JavaScript (Vanilla)source files are inside `src-tauri/dist` folder.
 - **Backend:** Rust (Tauri Framework).
-- **Plugins:** `tauri-plugin-autostart` for startup functionality.
+- **Plugins:**
+  - `tauri-plugin-autostart` for enabling automatic application startup with Windows.
+  - `tauri-plugin-notification` for sending native system notifications (timer completion, Pomodoro transitions, background alerts).
+  - `tauri-plugin-log` for centralized logging and debugging from both Rust and JavaScript.
+  - `tauri-plugin-single-instance` to ensure only one instance of the application runs at a time.
+
 
 ### Installation & Development
 1. **Prerequisites:**
@@ -93,7 +98,12 @@
 ### التقنيات المستخدمة
 - **الواجهة الأمامية (Frontend):** HTML, CSS, JavaScript الملفات الاساسية داخل فولدر `src-tauri/dist`.
 - **الخلفية (Backend):** Rust (عبر إطار العمل Tauri).
-- **الإضافات:** `tauri-plugin-autostart` لخاصية التشغيل التلقائي.
+- **الإضافات:**
+  - `tauri-plugin-autostart` لتمكين تشغيل التطبيق تلقائيًا مع نظام ويندوز.
+  - `tauri-plugin-notification` لإرسال إشعارات نظام أصلية (انتهاء المؤقت، الانتقال بين جلسات البومودورو، والتنبيهات في الخلفية).
+  - `tauri-plugin-log` لتسجيل الأحداث والأخطاء من Rust وواجهة JavaScript لأغراض التصحيح والمتابعة.
+  - `tauri-plugin-single-instance` لضمان تشغيل نسخة واحدة فقط من التطبيق في نفس الوقت.
+
 
 ### التثبيت والتشغيل
 1. **المتطلبات:**
