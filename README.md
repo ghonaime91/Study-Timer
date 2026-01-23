@@ -17,7 +17,6 @@
   - Native Tauri notifications; Web Notifications fallback when window is not focused (after permission).
 - **UI & Themes**
   - Four themes: Primary, Dark, Light, Glassy.
-  - Arabic typography refinements in Glassy theme; improved file input spacing in Glassy.
   - Full support for Arabic UI.
 - **System Integration**
   - Minimize to system tray with Show/Exit menu.
@@ -77,7 +76,6 @@
   - إشعارات أصلية عبر Tauri؛ وبديل إشعارات الويب عند عدم تركيز النافذة (بعد منح الإذن).
 - **الواجهة والمظاهر**
   - أربع مظاهر: الأساسي، الداكن، الفاتح، الزجاجي.
-  - تحسين عرض الخط العربي في المظهر الزجاجي؛ وضبط مسافات حقل رفع الملف في المظهر الزجاجي.
   - دعم كامل  للغة العربية.
 - **التكامل مع النظام**
   - تصغير إلى شريط النظام مع قائمة "إظهار/خروج".
